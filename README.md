@@ -70,9 +70,6 @@ COPY /etc/example.gpkg /srv/data/example.gpkg
 Running the example above will create a service on the url: http:/localhost/example/wfs? An working example can be found: https://github.com/PDOK/mapserver/tree/natura2000-example
 
 ## Misc
-### Why not single OCS service like WMS-only or WFS-only like in our other repos?
-This mapserver is meant to run during delevopment phase or for use during Proof-of-Concepts. When one wants to run in production we advise to use our other images. Like if one wants a [OGC WMS](http://www.opengeospatial.org/standards/wms) service, then we have our [pdok/mapserver-wms-ogr](https://github.com/PDOK/mapserver-wms-ogr) image.
-So why are those (WFS and WMS) seperated? We regard both service as completly different. Regarding microservices it is logical to split those from each other. Also in our experience we have run to often into issues that the same data is exposed as a WMS and WFS.
 
 ### Why NGINX
 We would like to run this on a scalable infrastructure like Kubernetes that has it's Ingress based on NGINX. By keeping both the same we hope to have less differentiation in our application stack.
