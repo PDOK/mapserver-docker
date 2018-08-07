@@ -157,7 +157,9 @@ RUN apt-get clean
 RUN mkdir -p /var/log/supervisor
 
 COPY etc/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY etc/nginx.conf /etc/nginx/sites-available/default
+COPY etc/nginx.conf /etc/nginx/conf.d/default.conf
+COPY etc/uwsgi.conf /uwsgi.conf
+COPY etc/uwsgi_params /etc/nginx/uwsgi_params
 
 EXPOSE 80
 
