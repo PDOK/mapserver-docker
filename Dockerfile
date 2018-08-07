@@ -1,5 +1,5 @@
 FROM debian:stretch as builder
-MAINTAINER PDOK dev <pdok@kadaster.nl>
+LABEL maintainer="pdok@kadaster.nl"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
@@ -107,7 +107,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     ldconfig
 
 FROM debian:stretch as service
-MAINTAINER PDOK dev <pdok@kadaster.nl>
+LABEL maintainer="pdok@kadaster.nl"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
