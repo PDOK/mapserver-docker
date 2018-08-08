@@ -146,11 +146,11 @@ RUN echo "deb http://nginx.org/packages/mainline/debian/ stretch nginx" >> /etc/
 RUN wget http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    nginx \
-    supervisor \
-    spawn-fcgi && \
-    rm -rf /var/lib/apt/lists/*
+        apt-get install -y --no-install-recommends \
+        nginx \
+        supervisor \
+        uwsgi && \
+        rm -rf /var/lib/apt/lists/*
 
 RUN apt-get clean
 
