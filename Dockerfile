@@ -4,7 +4,7 @@ LABEL maintainer="pdok@kadaster.nl"
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
 
-RUN apt-get update && \
+RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         gettext \
@@ -33,7 +33,7 @@ RUN cd /tmp && \
         make install && \
         ldconfig
 
-RUN apt-get update && \
+RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
         libcurl4-gnutls-dev \
         libfribidi-dev \
@@ -115,7 +115,7 @@ ENV TZ Europe/Amsterdam
 COPY --from=0 /usr/local/bin /usr/local/bin
 COPY --from=0 /usr/local/lib /usr/local/lib
 
-RUN apt-get update && \
+RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
         fonts-liberation2 \
         libcairo2-dev \
