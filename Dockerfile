@@ -1,4 +1,4 @@
-FROM debian:stretch as builder
+FROM debian:buster as builder
 LABEL maintainer="pdok@kadaster.nl"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -22,7 +22,7 @@ RUN apt-get -y update && \
 
 RUN update-locale LANG=C.UTF-8
 
-ENV HARFBUZZ_VERSION 1.2.4
+ENV HARFBUZZ_VERSION 2.4.0
 
 RUN cd /tmp && \
         wget https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-$HARFBUZZ_VERSION.tar.bz2 && \
@@ -106,7 +106,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM debian:stretch as service
+FROM debian:buster as service
 LABEL maintainer="pdok@kadaster.nl"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -117,52 +117,39 @@ COPY --from=0 /usr/local/lib /usr/local/lib
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
-        fonts-liberation2 \
-        libcairo2-dev \
-        libcurl4-gnutls-dev \
-        libfribidi-dev \
-        libgif-dev \
-        libjpeg-dev \
-        libpq-dev \
-        librsvg2-dev \
-        libpng-dev \
-        libfreetype6-dev \
-        libjpeg-dev \
-        libexempi-dev \
-        libfcgi-dev \
-        libgdal-dev \
-        libgeos-dev \
-        libproj-dev \
-        libxslt1-dev \
+        libpng16-16 \
+        python-cairo \
+        libfreetype6 \
+        libjpeg62-turbo \
+        libfcgi0ldbl \
+        libfribidi0 \
+        libgdal20 \
+        libgeos-c1v5 \
+        libglib2.0-0 \
+        libproj13 \
+        libxml2 \
+        libxslt1.1 \
+        libexempi8 \
+        libpq5 \
+        libfreetype6 \
+        gettext-base \
         wget \
+        lighttpd \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
 
 COPY etc/epsg /usr/share/proj
+COPY etc/lighttpd.conf /lighttpd.conf
 
 RUN chmod o+x /usr/local/bin/mapserv
-
-RUN echo "deb http://nginx.org/packages/mainline/debian/ stretch nginx" >> /etc/apt/sources.list
-RUN wget http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key
-
-RUN apt-get update && \
-        apt-get install -y --no-install-recommends \
-        nginx \
-        supervisor \
-        uwsgi && \
-        rm -rf /var/lib/apt/lists/*
-
 RUN apt-get clean
 
-RUN mkdir -p /var/log/supervisor
-
-COPY etc/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY etc/nginx.conf /etc/nginx/conf.d/default.conf
-COPY etc/uwsgi.conf /uwsgi.conf
-COPY etc/uwsgi_params /etc/nginx/uwsgi_params
+ENV DEBUG 0
+ENV MIN_PROCS 1
+ENV MAX_PROCS 3
+ENV MAX_LOAD_PER_PROC 4
+ENV IDLE_TIMEOUT 20
 
 EXPOSE 80
 
-WORKDIR /etc/nginx
-
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["lighttpd", "-D", "-f", "/lighttpd.conf"]
