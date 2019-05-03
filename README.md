@@ -1,79 +1,87 @@
-# Mapserver
+# Mapserver docker
+
+## TL;DR
+
+```docker
+docker build -t pdok/mapserver-docker .
+docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`:/srv/data pdok/mapserver-docker
+
+docker stop mapserver-example
+docker rm mapserver-example
+```
 
 ## Introduction
+
 This project aims to fulfill two needs:
+
 1. create a [OGC services](http://www.opengeospatial.org/standards) that are deployable on a scalable infrastructure.
 2. create a useable [Docker](https://www.docker.com) base image.
 
-Fulfilling the first need the main purpose is to create an Docker base image that eventually can be run on a platform like [Kubernetes](https://kubernetes.io/).
+Fulfilling the first need the main purpose is to create an Docker base image that can be run on a platform like [Kubernetes](https://kubernetes.io/).
 
 Regarding the second need, finding a usable Mapserver Docker image is a challenge. Most images expose the &map=... QUERY_STRING in the getcapabilities, don't run in fastcgi and are based on Apache.
 
 ## What will it do
-It will create an Mapserver application run with a modern web application NGINX in which the map=.. QUERY_STRING issue is fixed. The application will work best incombination with GDAL/OGR vector datasources like: [Geopackage](http://www.geopackage.org/) or SHAPE files. 
 
-## Components
-This stack is composed of the following:
-* [Mapserver](http://mapserver.org/)
-* [OGR2OGR](http://www.gdal.org/ogr2ogr.html)
-* [Postgis](http://postgis.net/)
-* [NGINX](https://www.nginx.com/)
-* [Supervisor](http://supervisord.org/)
+It will create an Mapserver application run with Lighttpd in which the map=... QUERY_STRING 'issue' is 'fixed'. This means that the MAP query parameter is removed from the QUERY_STRING.
 
-### Mapserver
-Mapserver is the platform that will provide the WFS, WMS of WCS services based on a vector datasource (Geopackage, SHAPE, Postgis).
-
-### OGR2OGR
-For transforming simple features from a data store to WFS features.
-
-### Postgis
-Postgis as spatial database for vector data.
-
-### NGINX
-NGINX is the web server we use to run Mapserver as a fastcgi web application. 
-
-### Supervisor
-Because we are running 2 processes (Mapserver CGI & NGINX) in a single Docker image we use Supervisor as a controller.
+The included EPSG file containing the projection parameters only contains a small set of available EPSG code, namely the once used by our organisation. If one wants to use additional EPSG projections one can overwrite this file.
 
 ## Docker image
 
 The Docker image contains 2 stages:
+
 1. builder
-2. Service
+2. service
 
 ### builder
+
 The builder stage compiles Mapserver. The Dockerfile contains all the available Mapserver build option explicitly, so it is clear which options are enabled and disabled.
 
 ### service
-The service stage copies the Mapserver, build in the first stage, and configures NGINX and Supervisor.
+
+The service stage copies the Mapserver application, build in the first stage the service stage, and configures Lighttpd & the epsg file.
 
 ## Usage
 
 ### Build
-```
-docker build -t pdok/mapserver .
+
+```docker
+docker build -t pdok/mapserver-docker .
 ```
 
 ### Run
+
 This image can be run straight from the commandline. A volumn needs to be mounted on the container directory /srv/data. The mounted volumn needs to contain at least one mapserver *.map file. The name of the mapfile will determine the URL path for the service.
-```
-docker run -d -p 80:80 --name mapserver-run-example -v /path/on/host:/srv/data pdok/mapserver
+
+```docker
+docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`:/srv/data pdok/mapserver-docker
 ```
 
-The prefered way to use it is as a Docker base image for an other Dockerfile, in which the necessay files are copied into the right directory (/srv/data)
-```
-FROM pdok/mapserver
+Running the example above will create a service on the url <http://localhost/?request=getcapabilities&service=wms>
 
-COPY /etc/example.map /srv/data/example.map
-COPY /etc/example.gpkg /srv/data/example.gpkg
+The ENV variables that can be set are:
+
+* DEBUG
+* MIN_PROCS
+* MAX_PROCS
+* MAX_LOAD_PER_PROC
+* IDLE_TIMEOUT
+* MS_MAPFILE
+
+The ENV variables, with the exception of MS_MAPFILE have a default value set in the Dockerfile.
+
+```docker
+docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-run-example -v /path/on/host:/srv/data pdok/mapserver-docker
 ```
-Running the example above will create a service on the url: http:/localhost/example/wfs? An working example can be found: https://github.com/PDOK/mapserver/tree/natura2000-example
 
 ## Misc
 
-### Why NGINX
-We would like to run this on a scalable infrastructure like Kubernetes that has it's Ingress based on NGINX. By keeping both the same we hope to have less differentiation in our application stack.
+### Why Lighttpd
+
+In our previous configurations we would run NGINX, while this is a good webservice and has a lot of configuration options, it runs with multiple processes. There for we needed supervisord for managing this, whereas Lighthttpd runs as a single proces. Also all the routing configuration options aren't needed, because that is handled by the infrastructure/platform, like Kubernetes. If one would like to configure some simple routing is still can be done in the lighttpd.conf.
 
 ### Used examples
-* https://github.com/srounet/docker-mapserver
-* https://github.com/Amsterdam/mapserver
+
+* <https://github.com/srounet/docker-mapserver>
+* <https://github.com/Amsterdam/mapserver>
