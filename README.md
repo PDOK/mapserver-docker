@@ -3,8 +3,8 @@
 ## TL;DR
 
 ```docker
-docker build -t pdok/mapserver-docker .
-docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`:/srv/data pdok/mapserver-docker
+docker build -t pdok/mapserver .
+docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`:/srv/data pdok/mapserver
 
 docker stop mapserver-example
 docker rm mapserver-example
@@ -47,7 +47,7 @@ The service stage copies the Mapserver application, build in the first stage the
 ### Build
 
 ```docker
-docker build -t pdok/mapserver-docker .
+docker build -t pdok/mapserver .
 ```
 
 ### Run
@@ -55,7 +55,7 @@ docker build -t pdok/mapserver-docker .
 This image can be run straight from the commandline. A volumn needs to be mounted on the container directory /srv/data. The mounted volumn needs to contain at least one mapserver *.map file. The name of the mapfile will determine the URL path for the service.
 
 ```docker
-docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`:/srv/data pdok/mapserver-docker
+docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`:/srv/data pdok/mapserver
 ```
 
 Running the example above will create a service on the url <http://localhost/?request=getcapabilities&service=wms>
@@ -72,7 +72,7 @@ The ENV variables that can be set are:
 The ENV variables, with the exception of MS_MAPFILE have a default value set in the Dockerfile.
 
 ```docker
-docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-run-example -v /path/on/host:/srv/data pdok/mapserver-docker
+docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-run-example -v /path/on/host:/srv/data pdok/mapserver
 ```
 
 ## Misc
