@@ -99,7 +99,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DLINK_STATIC_LIBMAPSERVER=OFF \
         -DWITH_APACHE_MODULE=OFF \
         -DWITH_GENERIC_NINT=OFF \
-        -DWITH_USE_POINT_Z_M=ON \
+        -DWITH_POINT_Z_M=ON \
         -DWITH_PROTOBUFC=OFF \
         -DCMAKE_PREFIX_PATH=/opt/gdal && \
     make && \
