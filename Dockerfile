@@ -100,10 +100,6 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_APACHE_MODULE=OFF \          
         -DWITH_POINT_Z_M=ON \
         -DWITH_GENERIC_NINT=OFF \
-<<<<<<< HEAD
-        -DWITH_POINT_Z_M=ON \
-=======
->>>>>>> update mapserver 7.4 + new location custom epsg file
         -DWITH_PROTOBUFC=OFF \
         -DCMAKE_PREFIX_PATH=/opt/gdal && \
     make && \
