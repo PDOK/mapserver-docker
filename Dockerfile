@@ -52,7 +52,7 @@ RUN apt-get -y update && \
         libxslt1-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone --single-branch -b branch-7-2 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
+RUN git clone --single-branch -b branch-7-4 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
@@ -97,9 +97,13 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_V8=OFF \
         -DBUILD_STATIC=OFF \
         -DLINK_STATIC_LIBMAPSERVER=OFF \
-        -DWITH_APACHE_MODULE=OFF \
-        -DWITH_GENERIC_NINT=OFF \
+        -DWITH_APACHE_MODULE=OFF \          
         -DWITH_POINT_Z_M=ON \
+        -DWITH_GENERIC_NINT=OFF \
+<<<<<<< HEAD
+        -DWITH_POINT_Z_M=ON \
+=======
+>>>>>>> update mapserver 7.4 + new location custom epsg file
         -DWITH_PROTOBUFC=OFF \
         -DCMAKE_PREFIX_PATH=/opt/gdal && \
     make && \
@@ -138,7 +142,8 @@ RUN apt-get -y update && \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
 
-COPY etc/epsg /usr/share/proj
+# Copy the pdok custom epsg file, this is default NOT set with the ENV PROJ_LIB
+COPY etc/epsg /usr/share/proj-pdok/
 COPY etc/lighttpd.conf /lighttpd.conf
 
 RUN chmod o+x /usr/local/bin/mapserv

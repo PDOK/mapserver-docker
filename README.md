@@ -60,16 +60,22 @@ docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-exam
 
 Running the example above will create a service on the url <http://localhost/?request=getcapabilities&service=wms>
 
-The ENV variables that can be set are:
+The ENV variables that can be set are the following
 
-* DEBUG
-* MIN_PROCS
-* MAX_PROCS
-* MAX_LOAD_PER_PROC
-* IDLE_TIMEOUT
-* MS_MAPFILE
+```env
+DEBUG
+MIN_PROCS
+MAX_PROCS
+MAX_LOAD_PER_PROC
+IDLE_TIMEOUT
+MS_MAPFILE
+
+PROJ_LIB
+```
 
 The ENV variables, with the exception of MS_MAPFILE have a default value set in the Dockerfile.
+
+The gdal PROJ_LIB env is default set with the value /usr/share/proj. For performance reasons one would like to set a custom PROJ_LIB containing a minimum of available EPSG codes. This can be done with the mentioned PROJ_LIB env.
 
 ```docker
 docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-run-example -v /path/on/host:/srv/data pdok/mapserver
