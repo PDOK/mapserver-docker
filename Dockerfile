@@ -138,8 +138,6 @@ RUN apt-get -y update && \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy the pdok custom epsg file, this is default NOT set with the ENV PROJ_LIB
-COPY etc/epsg /usr/share/proj-pdok/
 COPY etc/lighttpd.conf /lighttpd.conf
 
 RUN chmod o+x /usr/local/bin/mapserv
