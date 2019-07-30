@@ -1,5 +1,8 @@
 # Mapserver docker
 
+![GitHub release](https://img.shields.io/github/release/PDOK/mapserver-docker.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapserver.svg)
+
 ## TL;DR
 
 ```docker
