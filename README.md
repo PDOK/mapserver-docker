@@ -80,7 +80,29 @@ The ENV variables, with the exception of MS_MAPFILE have a default value set in 
 The gdal PROJ_LIB env is default set with the value /usr/share/proj. For performance reasons one would like to set a custom PROJ_LIB containing a minimum of available EPSG codes. This can be done with the mentioned PROJ_LIB env.
 
 ```docker
-docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-run-example -v /path/on/host:/srv/data pdok/mapserver
+docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map --rm -d -p 80:80 --name mapserver-run-example -v `pwd`/example:/srv/data pdok/mapserver
+```
+
+## Example
+
+When starting the container it will create a WMS & WFS service on the end-point
+
+```html
+http://localhost?
+```
+
+### Example request
+
+```html
+http://localhost/?request=getfeature&service=wfs&VERSION=2.0.0&typename=example:example&count=1
+```
+
+```html
+http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2,54,9&CRS=EPSG:4326&WIDTH=905&HEIGHT=517&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE
+```
+
+```html
+http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.9306039592783506,0.48758765231731171,55.46504193821721884,12.33319204541738756&CRS=EPSG:4326&WIDTH=1530&HEIGHT=844&LAYERS=example&STYLES=&FORMAT=image/png&QUERY_LAYERS=example&INFO_FORMAT=text/html&I=389&J=537&FEATURE_COUNT=10
 ```
 
 ## Misc
