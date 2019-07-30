@@ -1,5 +1,5 @@
 FROM debian:buster as builder
-LABEL maintainer="pdok@kadaster.nl"
+LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
@@ -106,8 +106,8 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM debian:buster as service
-LABEL maintainer="pdok@kadaster.nl"
+FROM pdok/lighttpd:1.4 as service
+LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
@@ -134,7 +134,6 @@ RUN apt-get -y update && \
         libfreetype6 \
         gettext-base \
         wget \
-        lighttpd \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
 
