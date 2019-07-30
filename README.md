@@ -7,10 +7,9 @@
 
 ```docker
 docker build -t pdok/mapserver .
-docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`:/srv/data pdok/mapserver
+docker run -e MS_MAPFILE=/srv/data/example.map --rm -d -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
 
 docker stop mapserver-example
-docker rm mapserver-example
 ```
 
 ## Introduction
