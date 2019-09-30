@@ -52,7 +52,7 @@ RUN apt-get -y update && \
         libxslt1-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone --single-branch -b branch-7-4 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
+RUN git clone --single-branch -b rel-7-4-2 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
@@ -106,7 +106,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4 as service
+FROM pdok/lighttpd:1.4-1 as service
 LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
 ENV DEBIAN_FRONTEND noninteractive
