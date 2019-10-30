@@ -53,8 +53,10 @@ RUN apt-get -y update && \
         libxslt1-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone --single-branch -b rel-7-4-2 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
 
+RUN apt-get -y update --fix-missing
+
+RUN git clone --single-branch -b rel-7-4-2 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
 
 COPY patches/contains.patch /tmp
 RUN cd /usr/local/src/mapserver && \
