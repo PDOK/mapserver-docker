@@ -15,6 +15,7 @@ RUN apt-get -y update && \
         libcairo2-dev \
         locales \
         make \
+        patch \
         openssh-server \
         software-properties-common \
         wget && \
@@ -53,6 +54,12 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN git clone --single-branch -b rel-7-4-2 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
+
+
+COPY patches/contains.patch /tmp
+RUN cd /usr/local/src/mapserver && \
+    patch -p1 < /tmp/contains.patch
+
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
