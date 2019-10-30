@@ -59,9 +59,7 @@ RUN apt-get -y update --fix-missing
 RUN git clone --single-branch -b rel-7-4-2 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
 
 COPY patches/contains.patch /tmp
-RUN cd /usr/local/src/mapserver && \
-    patch -p1 < /tmp/contains.patch
-
+RUN patch -s -d /usr/local/src/mapserver -p0 < /tmp/contains.patch
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
