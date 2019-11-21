@@ -58,7 +58,7 @@ docker build -t pdok/mapserver .
 This image can be run straight from the commandline. A volumn needs to be mounted on the container directory /srv/data. The mounted volumn needs to contain at least one mapserver *.map file. The name of the mapfile will determine the URL path for the service.
 
 ```docker
-docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`:/srv/data pdok/mapserver
+docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
 ```
 
 Running the example above will create a service on the url <http://localhost/?request=getcapabilities&service=wms>
