@@ -50,15 +50,13 @@ RUN apt-get -y update && \
         libgdal-dev \
         libgeos-dev \
         libproj-dev \
+        librsvg2-dev \
         libxslt1-dev && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get -y update --fix-missing
 
-RUN git clone --single-branch -b rel-7-4-2 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
-
-COPY patches/contains.patch /tmp
-RUN patch -s -d /usr/local/src/mapserver -p0 < /tmp/contains.patch
+RUN git clone --single-branch -b pdok-7-4-patch-1 https://github.com/pdok/mapserver/ /usr/local/src/mapserver
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
@@ -72,7 +70,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_ICONV=ON \
         -DWITH_CAIRO=ON \
         -DWITH_SVGCAIRO=OFF \
-        -DWITH_RSVG=OFF \
+        -DWITH_RSVG=ON \
         -DWITH_MYSQL=OFF \
         -DWITH_FCGI=ON \
         -DWITH_GEOS=ON \
@@ -138,6 +136,7 @@ RUN apt-get -y update && \
         libexempi8 \
         libpq5 \
         libfreetype6 \
+        librsvg2-2 \
         gettext-base \
         wget \
         gnupg && \
