@@ -56,7 +56,7 @@ RUN apt-get -y update && \
 
 RUN apt-get -y update --fix-missing
 
-RUN git clone --single-branch -b pdok-7-4-patch-1 https://github.com/pdok/mapserver/ /usr/local/src/mapserver
+RUN git clone --single-branch -b rel-7-4-3 https://github.com/pdok/mapserver/ /usr/local/src/mapserver
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
