@@ -74,6 +74,23 @@ MAP
     FORMATOPTION "USE_FEATUREID=true"    
   END
 
+  OUTPUTFORMAT
+    NAME "SVG"
+    DRIVER CAIRO/SVG
+    MIMETYPE "image/svg+xml"
+    IMAGEMODE RGB
+    EXTENSION "svg"
+  END
+
+  OUTPUTFORMAT
+    NAME "MVT"
+    DRIVER "MVT"
+    MIMETYPE "application/vnd.mapbox-vector-tile"
+    FORMATOPTION "EDGE_BUFFER=20"
+    EXTENSION "pbf"
+    FORMATOPTION "EXTENT=4096"
+  END  
+
   WEB
     METADATA
       "ows_title"                      "Example"
@@ -86,7 +103,7 @@ MAP
       "wfs_getfeature_formatlist"      "GEOJSON,JSON,XML,GML3"
       "wfs_maxfeatures"                "1000"
 
-      "wms_getmap_formatlist"          "image/svg+xml,image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8"
+      "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml,application/vnd.mapbox-vector-tile"
       "wms_enable_request"             "* !GetStyles"         
       "wms_bbox_extended"              "true" 
       "wms_namespace_prefix"           "example"
