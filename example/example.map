@@ -33,7 +33,7 @@ MAP
       "ows_hoursofservice"               ""
       "ows_contactinstructions"          ""
       "ows_role"                         ""
-      "ows_srs"                          "EPSG:4326 EPSG:3857 EPSG:4258 CRS:84"
+      "ows_srs"                          "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
       "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0"      
     END
   END
@@ -83,9 +83,8 @@ MAP
   END
 
   OUTPUTFORMAT
-    NAME "MVT"
-    DRIVER "MVT"
-    MIMETYPE "application/vnd.mapbox-vector-tile"
+    NAME "mvt"
+    DRIVER MVT  
     FORMATOPTION "EDGE_BUFFER=20"
     EXTENSION "pbf"
     FORMATOPTION "EXTENT=4096"
@@ -103,7 +102,7 @@ MAP
       "wfs_getfeature_formatlist"      "GEOJSON,JSON,XML,GML3"
       "wfs_maxfeatures"                "1000"
 
-      "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml,application/vnd.mapbox-vector-tile"
+      "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml"
       "wms_enable_request"             "* !GetStyles"         
       "wms_bbox_extended"              "true" 
       "wms_namespace_prefix"           "example"
@@ -120,7 +119,7 @@ MAP
     METADATA
       "wfs_title"               "example"
       "wfs_abstract"            "Layer containing the example data"
-      "wfs_srs"                 "EPSG:4326 EPSG:4258"      
+      "wfs_srs"                 "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"      
       "wfs_extent"              "2 50 9 54"      
       "wfs_bbox_extended"       "true"
       "wfs_enable_request"      "*"
@@ -137,10 +136,11 @@ MAP
       "wms_featureid"           "msfid" 
       "wms_extent"              "2 50 9 54"    
       "wms_abstract"            "Layer containing the example data"
+      "wms_srs"                 "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
       "wms_keywordlist"         "example,unknown"
 
-      "wms_include_items"        "all" 
-      "wms_exclude_items"        "msfid"
+      "wms_include_items"       "all" 
+      "wms_exclude_items"       "msfid"
     END
 
     CLASSGROUP "example:style"
@@ -154,7 +154,7 @@ MAP
 
     PROJECTION
       "init=epsg:4326"
-    END    
+    END
 
     CONNECTIONTYPE OGR
     CONNECTION "polygons.geojson"
