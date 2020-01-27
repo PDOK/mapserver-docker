@@ -17,6 +17,8 @@ RUN apt-get -y update && \
         make \
         patch \
         openssh-server \
+        protobuf-compiler \
+        protobuf-c-compiler \
         software-properties-common \
         wget && \
     rm -rf /var/lib/apt/lists/*
@@ -51,6 +53,9 @@ RUN apt-get -y update && \
         libgeos-dev \
         libproj-dev \
         librsvg2-dev \
+        libprotobuf-dev \
+        libprotobuf-c-dev \
+        libprotobuf-c1 \
         libxslt1-dev && \
     rm -rf /var/lib/apt/lists/*
 
@@ -104,7 +109,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_APACHE_MODULE=OFF \          
         -DWITH_POINT_Z_M=ON \
         -DWITH_GENERIC_NINT=OFF \
-        -DWITH_PROTOBUFC=OFF \
+        -DWITH_PROTOBUFC=ON \
         -DCMAKE_PREFIX_PATH=/opt/gdal && \
     make && \
     make install && \
@@ -137,6 +142,8 @@ RUN apt-get -y update && \
         libpq5 \
         libfreetype6 \
         librsvg2-2 \
+        libprotobuf17 \
+        libprotobuf-c1 \
         gettext-base \
         wget \
         gnupg && \
