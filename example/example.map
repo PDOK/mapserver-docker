@@ -5,8 +5,8 @@ MAP
   UNITS         meters
   STATUS        ON
 
-  RESOLUTION 96
-  DEFRESOLUTION 96
+  RESOLUTION 91
+  DEFRESOLUTION 91
 
   PROJECTION
     "init=epsg:4326"
