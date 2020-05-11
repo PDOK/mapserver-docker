@@ -45,6 +45,8 @@ MAP
     FORMATOPTION "STORAGE=stream"
     FORMATOPTION "FORM=SIMPLE"
     FORMATOPTION "USE_FEATUREID=true"
+    FORMATOPTION "LCO:ID_FIELD=fid"
+    FORMATOPTION "LCO:ID_TYPE=Integer"
   END
 
   OUTPUTFORMAT
@@ -53,7 +55,9 @@ MAP
     MIMETYPE "application/json"
     FORMATOPTION "STORAGE=stream"
     FORMATOPTION "FORM=SIMPLE"
-    FORMATOPTION "USE_FEATUREID=true"    
+    FORMATOPTION "USE_FEATUREID=true"
+    FORMATOPTION "LCO:ID_FIELD=fid"
+    FORMATOPTION "LCO:ID_TYPE=Integer"
   END
 
   OUTPUTFORMAT
@@ -69,9 +73,13 @@ MAP
     NAME "GML3"
     DRIVER "OGR/GML"
     MIMETYPE "text/xml; subtype=gml/3.1.1"
+    FORMATOPTION "DSCO:FORMAT=GML3"
+    FORMATOPTION "DSCO:XSISCHEMA=EXTERNAL"
+    FORMATOPTION "DSCO:PREFIX=example"
+    FORMATOPTION "DSCO:TARGET_NAMESPACE=http://example.unknown.org"    
     FORMATOPTION "STORAGE=stream"
     FORMATOPTION "FORM=SIMPLE"
-    FORMATOPTION "USE_FEATUREID=true"    
+    FORMATOPTION "USE_FEATUREID=true"
   END
 
   OUTPUTFORMAT
@@ -95,6 +103,7 @@ MAP
       "ows_title"                      "Example"
       "ows_abstract"                   "Service containing a example"
       "ows_keywordlist"                "example,unknown"
+      "ows_schemas_location"           "http://schemas.opengis.net"
 
       "wfs_extent"                     "2 50 9 54"
       "wfs_namespace_prefix"           "example"
@@ -126,21 +135,22 @@ MAP
 
       "wfs_include_items"       "all"
       "gml_include_items"       "all"
-      "gml_featureid"           "msfid"
-      "gml_exclude_items"       "msfid" 
+      "gml_featureid"           "fid"
       "gml_geometries"          "geometry"
     
       "wms_title"               "example"
 
       "gml_geometries"          "geom"
-      "wms_featureid"           "msfid" 
       "wms_extent"              "2 50 9 54"    
       "wms_abstract"            "Layer containing the example data"
       "wms_srs"                 "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
       "wms_keywordlist"         "example,unknown"
 
       "wms_include_items"       "all" 
+<<<<<<< HEAD
       "wms_exclude_items"       "msfid"
+=======
+>>>>>>> origin/update_example
     END
 
     CLASSGROUP "example:style"
@@ -158,7 +168,7 @@ MAP
 
     CONNECTIONTYPE OGR
     CONNECTION "polygons.geojson"
-    DATA "select fid as msfid, * from polygons"
+    DATA "select fid, name from polygons"
     
     DUMP TRUE
     TEMPLATE /srv/data/example.html
