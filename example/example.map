@@ -164,7 +164,7 @@ MAP
 
     CONNECTIONTYPE OGR
     CONNECTION "polygons.geojson"
-    DATA "select fid, name from polygons"
+    DATA "polygons"
     
     DUMP TRUE
     TEMPLATE /srv/data/example.html
