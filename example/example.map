@@ -147,10 +147,6 @@ MAP
       "wms_keywordlist"         "example,unknown"
 
       "wms_include_items"       "all" 
-<<<<<<< HEAD
-      "wms_exclude_items"       "msfid"
-=======
->>>>>>> origin/update_example
     END
 
     CLASSGROUP "example:style"
