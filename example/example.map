@@ -10,7 +10,7 @@ MAP
 
   PROJECTION
     "init=epsg:4326"
-  END      
+  END
 
   WEB
     METADATA
@@ -39,8 +39,7 @@ MAP
     END
   END
 
-
-   OUTPUTFORMAT
+  OUTPUTFORMAT
     NAME "GEOJSON"       # format name (visible as format in the 1.0.0 capabilities)
     DRIVER "OGR/GEOJSON"
     MIMETYPE "application/json; subtype=geojson"
@@ -62,7 +61,6 @@ MAP
     FORMATOPTION "LCO:ID_TYPE=STRING"
   END
 
-  
   OUTPUTFORMAT
     NAME "XML"
     DRIVER "OGR/GML"
@@ -82,11 +80,29 @@ MAP
     FORMATOPTION "STORAGE=stream"
     FORMATOPTION "FORM=SIMPLE"
     FORMATOPTION "USE_FEATUREID=true"
-    FORMATOPTION "DSCO:GML_ID=fid"
+    FORMATOPTION "DSCO:FORMAT=GML3Deegree"
+    FORMATOPTION "DSCO:GML_FEATURE_COLLECTION=YES"
     FORMATOPTION "DSCO:PREFIX=example"
-    FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org"
+    FORMATOPTION "DSCO:XSISCHEMA=EXTERNAL"
+    FORMATOPTION "DSCO:TARGET_NAMESPACE=http://example.unknown.org"
+    FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"
   END
 
+  OUTPUTFORMAT
+    NAME "GML32"
+    DRIVER "OGR/GML"
+    MIMETYPE "text/xml; subtype=gml/3.2.1"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+    FORMATOPTION "DSCO:FORMAT=GML3.2"
+    FORMATOPTION "DSCO:GML_ID=example.collection"
+    FORMATOPTION "DSCO:GML_FEATURE_COLLECTION=YES"
+    FORMATOPTION "DSCO:PREFIX=example"
+    FORMATOPTION "DSCO:XSISCHEMA=EXTERNAL"
+    FORMATOPTION "DSCO:TARGET_NAMESPACE=http://example.unknown.org"
+    FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"
+  END  
    
   OUTPUTFORMAT
     NAME "SVG"
@@ -98,7 +114,7 @@ MAP
 
   OUTPUTFORMAT
     NAME "mvt"
-    DRIVER MVT  
+    DRIVER MVT
     FORMATOPTION "EDGE_BUFFER=20"
     EXTENSION "pbf"
     FORMATOPTION "EXTENT=4096"
@@ -114,15 +130,15 @@ MAP
       "wfs_extent"                     "2 50 9 54"
       "wfs_namespace_prefix"           "example"
       "wfs_namespace_uri"              "http://example.unknown.org"
-      "wfs_getfeature_formatlist"      "GEOJSON,JSON,XML,GML3"
+      "wfs_getfeature_formatlist"      "GEOJSON,JSON,XML,GML3,GML32"
       "wfs_maxfeatures"                "1000"
 
       "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml"
-      "wms_enable_request"             "* !GetStyles"         
-      "wms_bbox_extended"              "true" 
+      "wms_enable_request"             "* !GetStyles !DescribeLayer"
+      "wms_bbox_extended"              "true"
       "wms_namespace_prefix"           "example"
       "wms_namespace_uri"              "http://example.unknown.org"
-      "wms_feature_info_mime_type"     "application/json,application/json; subtype=geojson,application/vnd.ogc.gml,text/html,text/plain,text/xml,text/xml; subtype=gml/3.1.1"
+      "wms_getfeatureinfo_formatlist"  "text/html,text/xml; subtype=gml/3.2.1,text/xml; subtype=gml/3.1.1,application/json,application/json; subtype=geojson"
     END
   END
 
@@ -132,29 +148,26 @@ MAP
     TYPE POLYGON
 
     METADATA
-      "ows_featureid"           "id"
-      
       "wfs_title"               "example"
       "wfs_abstract"            "Layer containing the example data"
       "wfs_srs"                 "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"      
-      "wfs_extent"              "2 50 9 54"      
+      "wfs_extent"              "2 50 9 54"
       "wfs_bbox_extended"       "true"
       "wfs_enable_request"      "*"
       "wfs_include_items"       "all"
 
-      "gml_include_items" "all"
-      "gml_exclude_items" "id"
-      "gml_msfid_alias"   "fid"
-      "gml_featureid"     "id"
-      "gml_geometries"    "geom"
-      "gml_types"         "auto"
+      "gml_include_items"       "all"
+      "gml_exclude_items"       "id"
+      "gml_featureid"           "id"
+      "gml_geometries"          "geom"
+      "gml_types"               "auto"
 
       "wms_title"               "example"
       "wms_extent"              "2 50 9 54"    
       "wms_abstract"            "Layer containing the example data"
       "wms_srs"                 "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
       "wms_keywordlist"         "example,unknown"
-      "wms_include_items"       "all" 
+      "wms_include_items"       "all"
     END
 
     CLASSGROUP "example:style"
