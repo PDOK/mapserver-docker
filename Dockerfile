@@ -126,6 +126,7 @@ COPY --from=0 /usr/local/lib /usr/local/lib
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
+        ca-certificates \
         libpng16-16 \
         python-cairo \
         libfreetype6 \
