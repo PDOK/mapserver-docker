@@ -35,6 +35,7 @@ MAP
       "ows_role"                         ""
       "ows_srs"                          "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
       "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0"      
+      "wms_getfeatureinfo_formatlist"    "application/vnd.ogc.gml,text/html,text/plain,application/json,application/json; subtype=geojson,text/xml,text/xml; subtype=gml/3.1.1"
     END
   END
 
@@ -81,6 +82,9 @@ MAP
     FORMATOPTION "STORAGE=stream"
     FORMATOPTION "FORM=SIMPLE"
     FORMATOPTION "USE_FEATUREID=true"
+    FORMATOPTION "DSCO:GML_ID=fid"
+    FORMATOPTION "DSCO:PREFIX=example"
+    FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org"
   END
 
    
