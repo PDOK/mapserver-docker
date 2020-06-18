@@ -4,6 +4,11 @@ MAP
   EXTENT        2 50 9 54
   UNITS         meters
   STATUS        ON
+  SIZE          5000 5000
+  
+  ## global debug settings for mapserver, remove comment in lines below to enable
+  # DEBUG         4         # https://mapserver.org/optimization/debugging.html
+  # CONFIG "CPL_DEBUG" "ON" # GDAL
 
   RESOLUTION 91
   DEFRESOLUTION 91
@@ -35,7 +40,6 @@ MAP
       "ows_role"                         ""
       "ows_srs"                          "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
       "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0"      
-      "wms_getfeatureinfo_formatlist"    "application/vnd.ogc.gml,text/html,text/plain,application/json,application/json; subtype=geojson,text/xml,text/xml; subtype=gml/3.1.1"
     END
   END
 
@@ -74,7 +78,7 @@ MAP
   END
 
   OUTPUTFORMAT
-    NAME "GML3"
+    NAME "OGRGML3"
     DRIVER "OGR/GML"
     MIMETYPE "text/xml; subtype=gml/3.1.1"
     FORMATOPTION "STORAGE=stream"
@@ -89,7 +93,7 @@ MAP
   END
 
   OUTPUTFORMAT
-    NAME "GML32"
+    NAME "OGRGML32"
     DRIVER "OGR/GML"
     MIMETYPE "text/xml; subtype=gml/3.2.1"
     FORMATOPTION "STORAGE=stream"
@@ -129,9 +133,9 @@ MAP
 
       "wfs_extent"                     "2 50 9 54"
       "wfs_namespace_prefix"           "example"
-      "wfs_namespace_uri"              "http://example.unknown.org"
-      "wfs_getfeature_formatlist"      "GEOJSON,JSON,XML,GML3,GML32"
+      "wfs_namespace_uri"              "http://example.unknown.org"      
       "wfs_maxfeatures"                "1000"
+      "wfs_onlineresource"             "http://localhost"
 
       "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml"
       "wms_enable_request"             "* !GetStyles !DescribeLayer"
@@ -139,6 +143,8 @@ MAP
       "wms_namespace_prefix"           "example"
       "wms_namespace_uri"              "http://example.unknown.org"
       "wms_getfeatureinfo_formatlist"  "text/html,text/xml; subtype=gml/3.2.1,text/xml; subtype=gml/3.1.1,application/json,application/json; subtype=geojson"
+      
+      "ows_sld_enabled"                "false"
     END
   END
 
@@ -146,28 +152,31 @@ MAP
     NAME "example"
     STATUS ON
     TYPE POLYGON
+    ## layer debug settings for mapserver, remove comment in lines below to enable
+    # DEBUG 4
 
     METADATA
-      "wfs_title"               "example"
-      "wfs_abstract"            "Layer containing the example data"
-      "wfs_srs"                 "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"      
-      "wfs_extent"              "2 50 9 54"
-      "wfs_bbox_extended"       "true"
-      "wfs_enable_request"      "*"
-      "wfs_include_items"       "all"
+      "wfs_title"                    "example"
+      "wfs_abstract"                 "Layer containing the example data"
+      "wfs_srs"                      "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"      
+      "wfs_extent"                   "2 50 9 54"
+      "wfs_bbox_extended"            "true"
+      "wfs_enable_request"           "*"
+      "wfs_include_items"            "all"
+      "wfs_getfeature_formatlist"    "OGRGML3,OGRGML32,GEOJSON,JSON"
 
-      "gml_include_items"       "all"
-      "gml_exclude_items"       "id"
-      "gml_featureid"           "id"
-      "gml_geometries"          "geom"
-      "gml_types"               "auto"
+      "gml_include_items"            "all"
+      "gml_exclude_items"            "id"
+      "gml_featureid"                "id"
+      "gml_geometries"               "geom"
+      "gml_types"                    "auto"
 
-      "wms_title"               "example"
-      "wms_extent"              "2 50 9 54"    
-      "wms_abstract"            "Layer containing the example data"
-      "wms_srs"                 "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
-      "wms_keywordlist"         "example,unknown"
-      "wms_include_items"       "all"
+      "wms_title"                    "example"
+      "wms_extent"                   "2 50 9 54"    
+      "wms_abstract"                 "Layer containing the example data"
+      "wms_srs"                      "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
+      "wms_keywordlist"              "example,unknown"
+      "wms_include_items"            "all"
     END
 
     CLASSGROUP "example:style"
