@@ -43,6 +43,7 @@ MAP
     END
   END
 
+ # outputformat used by WMS GetFeatureInfo and the WFS GetFeature requests
   OUTPUTFORMAT
     NAME "GEOJSON"       # format name (visible as format in the 1.0.0 capabilities)
     DRIVER "OGR/GEOJSON"
@@ -54,6 +55,7 @@ MAP
     FORMATOPTION "LCO:ID_TYPE=STRING"
   END
 
+  # outputformat used by WMS GetFeatureInfo and the WFS GetFeature requests
   OUTPUTFORMAT
     NAME "JSON"
     DRIVER "OGR/GEOJSON"
@@ -65,6 +67,7 @@ MAP
     FORMATOPTION "LCO:ID_TYPE=STRING"
   END
 
+  # outputformat used by WMS GetFeatureInfo request, not the WFS GetFeature requests
   OUTPUTFORMAT
     NAME "XML"
     DRIVER "OGR/GML"
@@ -77,6 +80,7 @@ MAP
     FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org"
   END
 
+  # outputformat used by WMS GetFeatureInfo request, not the WFS GetFeature requests
   OUTPUTFORMAT
     NAME "OGRGML3"
     DRIVER "OGR/GML"
@@ -92,6 +96,7 @@ MAP
     FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"
   END
 
+  # outputformat used by WMS GetFeatureInfo requests, not the WFS GetFeature requests
   OUTPUTFORMAT
     NAME "OGRGML32"
     DRIVER "OGR/GML"
@@ -100,7 +105,7 @@ MAP
     FORMATOPTION "FORM=SIMPLE"
     FORMATOPTION "USE_FEATUREID=true"
     FORMATOPTION "DSCO:FORMAT=GML3.2"
-    FORMATOPTION "DSCO:GML_ID=example.collection"
+    FORMATOPTION "DSCO:GML_ID=wms.example.getfeatureinfo.collection"
     FORMATOPTION "DSCO:GML_FEATURE_COLLECTION=YES"
     FORMATOPTION "DSCO:PREFIX=example"
     FORMATOPTION "DSCO:XSISCHEMA=EXTERNAL"
@@ -108,6 +113,7 @@ MAP
     FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"
   END  
    
+  # outputformat used by WMS GetMap requests
   OUTPUTFORMAT
     NAME "SVG"
     DRIVER CAIRO/SVG
@@ -116,6 +122,7 @@ MAP
     EXTENSION "svg"
   END
 
+  # outputformat used by tiled requests
   OUTPUTFORMAT
     NAME "mvt"
     DRIVER MVT
@@ -143,7 +150,7 @@ MAP
       "wms_namespace_prefix"           "example"
       "wms_namespace_uri"              "http://example.unknown.org"
       "wms_getfeatureinfo_formatlist"  "text/html,text/xml; subtype=gml/3.2.1,text/xml; subtype=gml/3.1.1,application/json,application/json; subtype=geojson"
-      
+
       "ows_sld_enabled"                "false"
     END
   END
