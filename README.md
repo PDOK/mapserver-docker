@@ -17,18 +17,18 @@ docker stop mapserver-example
 
 This project aims to fulfill two needs:
 
-1. create a [OGC services](http://www.opengeospatial.org/standards) that are deployable on a scalable infrastructure.
+1. create [OGC services](http://www.opengeospatial.org/standards) that are deployable on a scalable infrastructure.
 2. create a useable [Docker](https://www.docker.com) base image.
 
 Fulfilling the first need the main purpose is to create an Docker base image that can be run on a platform like [Kubernetes](https://kubernetes.io/).
 
-Regarding the second need, finding a usable Mapserver Docker image is a challenge. Most images expose the &map=... QUERY_STRING in the getcapabilities, don't run in fastcgi and are based on Apache.
+Regarding the second need, finding a usable [Mapserver](https://github.com/mapserver/mapserver) Docker image is a challenge. Most images expose the &map=... QUERY_STRING in the GetCapabilities, don't run in FastCGI and are based on Apache.
 
 ## What will it do
 
 It will create an Mapserver application run with Lighttpd in which the map=... QUERY_STRING 'issue' is 'fixed'. This means that the MAP query parameter is removed from the QUERY_STRING.
 
-The included EPSG file containing the projection parameters only contains a small set of available EPSG code, namely the once used by our organisation. If one wants to use additional EPSG projections one can overwrite this file.
+The included EPSG file containing the projection parameters only contains a small set of available EPSG code, namely the once used by our organization. If one wants to use additional EPSG projections one can overwrite this file.
 
 ## Docker image
 
@@ -43,7 +43,7 @@ The builder stage compiles Mapserver. The Dockerfile contains all the available 
 
 ### service
 
-The service stage copies the Mapserver application, build in the first stage the service stage, and configures Lighttpd & the epsg file.
+The service stage copies the Mapserver application, build in the first stage to the service stage, and configures Lighttpd
 
 ## Usage
 
@@ -55,7 +55,7 @@ docker build -t pdok/mapserver .
 
 ### Run
 
-This image can be run straight from the commandline. A volumn needs to be mounted on the container directory /srv/data. The mounted volumn needs to contain at least one mapserver *.map file. The name of the mapfile will determine the URL path for the service.
+This image can be run straight from the CLI. A  volume needs to be mounted on the container directory /srv/data. The mounted volume needs to contain a mapserver *.map file that matches the MS_MAPFILE env.
 
 ```docker
 docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
@@ -78,7 +78,7 @@ PROJ_LIB
 
 The ENV variables, with the exception of MS_MAPFILE have a default value set in the Dockerfile.
 
-The gdal PROJ_LIB env is default set with the value /usr/share/proj. For performance reasons one would like to set a custom PROJ_LIB containing a minimum of available EPSG codes. This can be done with the mentioned PROJ_LIB env.
+The [GDAL](https://gdal.org/) PROJ_LIB env is default set with the value /usr/share/proj. For performance reasons one would like to set a custom PROJ_LIB containing a minimum of available EPSG codes. This can be done with the mentioned PROJ_LIB env.
 
 ```docker
 docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map --rm -d -p 80:80 --name mapserver-run-example -v `pwd`/example:/srv/data pdok/mapserver
@@ -110,7 +110,7 @@ http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.93060
 
 ### Why Lighttpd
 
-In our previous configurations we would run NGINX, while this is a good webservice and has a lot of configuration options, it runs with multiple processes. There for we needed supervisord for managing this, whereas Lighthttpd runs as a single proces. Also all the routing configuration options aren't needed, because that is handled by the infrastructure/platform, like Kubernetes. If one would like to configure some simple routing is still can be done in the lighttpd.conf.
+In our previous configurations we would run NGINX, while this is a good web service and has a lot of configuration options, it runs with multiple processes. There for we needed supervisord for managing this, whereas Lighttpd runs as a single process. Also all the routing configuration options aren't needed, because that is handled by the infrastructure/platform, like [Kubernetes](https://kubernetes.io/). If one would like to configure some simple routing is still can be done in the lighttpd.conf.
 
 ### Used examples
 
