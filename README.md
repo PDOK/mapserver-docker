@@ -1,8 +1,8 @@
 # Mapserver docker
 
-![GitHub license](https://img.shields.io/github/license/PDOK/mapserver-docker)
-![GitHub release](https://img.shields.io/github/release/PDOK/mapserver-docker.svg)
-![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapserver.svg)
+[![GitHub license](https://img.shields.io/github/license/PDOK/mapserver-docker)](https://github.com/PDOK/mapserver-docker/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/PDOK/mapserver-docker.svg)](https://github.com/PDOK/mapserver-docker/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/pdok/mapserver.svg)](https://hub.docker.com/r/pdok/mapserver)
 
 ## TL;DR
 
