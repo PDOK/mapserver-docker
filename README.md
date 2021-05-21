@@ -112,6 +112,14 @@ http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.93060
 
 In our previous configurations we would run NGINX, while this is a good web service and has a lot of configuration options, it runs with multiple processes. There for we needed supervisord for managing this, whereas Lighttpd runs as a single process. Also all the routing configuration options aren't needed, because that is handled by the infrastructure/platform, like [Kubernetes](https://kubernetes.io/). If one would like to configure some simple routing is still can be done in the lighttpd.conf.
 
+### How to Contribute
+
+Make a pull request...
+
+### Contact
+
+Contacting the maintainers can be done through the issue tracker.
+
 ### Used examples
 
 * <https://github.com/srounet/docker-mapserver>
