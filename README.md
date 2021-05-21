@@ -58,7 +58,7 @@ docker build -t pdok/mapserver .
 This image can be run straight from the CLI. A  volume needs to be mounted on the container directory /srv/data. The mounted volume needs to contain a mapserver *.map file that matches the MS_MAPFILE env.
 
 ```docker
-docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
+docker run -e MS_MAPFILE=/srv/data/example.map --rm -d -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
 ```
 
 Running the example above will create a service on the url <http://localhost/?request=getcapabilities&service=wms>
