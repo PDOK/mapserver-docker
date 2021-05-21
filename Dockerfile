@@ -150,6 +150,7 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY etc/lighttpd.conf /lighttpd.conf
+COPY etc/filter-map.lua /filter-map.lua
 
 RUN chmod o+x /usr/local/bin/mapserv
 RUN apt-get clean
