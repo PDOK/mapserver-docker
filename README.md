@@ -58,7 +58,7 @@ docker build -t pdok/mapserver .
 This image can be run straight from the CLI. A  volume needs to be mounted on the container directory /srv/data. The mounted volume needs to contain a mapserver *.map file that matches the MS_MAPFILE env.
 
 ```docker
-docker run -e MS_MAPFILE=/srv/data/example.map -d -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
+docker run -e MS_MAPFILE=/srv/data/example.map --rm -d -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
 ```
 
 Running the example above will create a service on the url <http://localhost/?request=getcapabilities&service=wms>
@@ -111,6 +111,14 @@ http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.93060
 ### Why Lighttpd
 
 In our previous configurations we would run NGINX, while this is a good web service and has a lot of configuration options, it runs with multiple processes. There for we needed supervisord for managing this, whereas Lighttpd runs as a single process. Also all the routing configuration options aren't needed, because that is handled by the infrastructure/platform, like [Kubernetes](https://kubernetes.io/). If one would like to configure some simple routing is still can be done in the lighttpd.conf.
+
+### How to Contribute
+
+Make a pull request...
+
+### Contact
+
+Contacting the maintainers can be done through the issue tracker.
 
 ### Used examples
 
