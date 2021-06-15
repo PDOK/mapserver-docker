@@ -1,4 +1,5 @@
-FROM debian:bullseye as builder
+FROM debian:buster as builder
+LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
@@ -114,7 +115,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4.59 as service
+FROM pdok/lighttpd:1.4.53-buster as service
 LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -127,22 +128,22 @@ RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         libpng16-16 \
-        python-cairocffi-doc \
+        python-cairo \
         libfreetype6 \
         libjpeg62-turbo \
         libfcgi0ldbl \
         libfribidi0 \
-        libgdal28 \
+        libgdal20 \
         libgeos-c1v5 \
         libglib2.0-0 \
-        libproj19    \
+        libproj13 \
         libxml2 \
         libxslt1.1 \
         libexempi8 \
         libpq5 \
         libfreetype6 \
         librsvg2-2 \
-        libprotobuf23 \
+        libprotobuf17 \
         libprotobuf-c1 \
         gettext-base \
         wget \
