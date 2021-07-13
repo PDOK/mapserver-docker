@@ -1,4 +1,5 @@
 FROM debian:bullseye as builder
+LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
@@ -115,7 +116,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     ldconfig
 
 FROM pdok/lighttpd:1.4.59 as service
-LABEL maintainer="PDOK dev <pdok@kadaster.nl>"
+LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
