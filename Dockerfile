@@ -136,17 +136,17 @@ RUN apt-get -y update && \
         libjpeg62-turbo \
         libfcgi0ldbl \
         libfribidi0 \
-        libgdal28 \
+        libgdal20 \
         libgeos-c1v5 \
         libglib2.0-0 \
-        libproj19    \
+        libproj13 \
         libxml2 \
         libxslt1.1 \
         libexempi8 \
         libpq5 \
         libfreetype6 \
         librsvg2-2 \
-        libprotobuf23 \
+        libprotobuf17 \
         libprotobuf-c1 \
         gettext-base \
         wget \
