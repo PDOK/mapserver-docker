@@ -53,6 +53,12 @@ The service stage copies the Mapserver application, build in the first stage to 
 docker build -t pdok/mapserver .
 ```
 
+For a specific Dutch version which includes a specific (and smaller) epsg file and necessary grid corrections files.
+
+```docker
+docker build -t pdok/mapserver:nl -f Dockerfile.NL .
+```
+
 ### Run
 
 This image can be run straight from the CLI. A  volume needs to be mounted on the container directory /srv/data. The mounted volume needs to contain a mapserver *.map file that matches the MS_MAPFILE env.
