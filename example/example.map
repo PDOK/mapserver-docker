@@ -203,7 +203,6 @@ MAP
     CONNECTION "polygons.geojson"
     DATA "polygons"
     
-    DUMP TRUE
     TEMPLATE /srv/data/example.html
 
   END # LAYER
