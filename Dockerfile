@@ -159,6 +159,13 @@ COPY etc/filter-map.lua /filter-map.lua
 RUN chmod o+x /usr/local/bin/mapserv
 RUN apt-get clean
 
+# Add some common missing projections 
+RUN echo '# Goode Homolosine\n<152160> +proj=igh +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 <>'  >>  /usr/share/proj/epsg
+RUN echo '# LAEA for Africa\n<152161> +proj=laea +lat_0=5 +lon_0=20 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs <>'  >>  /usr/share/proj/epsg
+RUN echo '# Mollweide\n<54009> +proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs <>'  >>  /usr/share/proj/epsg
+RUN echo '# Eckert IV projection\n<54012> +proj=eck4 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs <>'  >>  /usr/share/proj/epsg 
+RUN echo '# Google mercator\n<900913> +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +over +nadgrids=@null +no_defs <>'  >>  /usr/share/proj/epsg 
+
 ENV DEBUG 0
 ENV MIN_PROCS 1
 ENV MAX_PROCS 3
