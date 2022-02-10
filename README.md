@@ -35,9 +35,10 @@ in FastCGI and are based on Apache.
 
 ## What will it do
 
-It will create an Mapserver application run with Lighttpd in which the map=...
-QUERY_STRING 'issue' is 'fixed'. This means that the MAP query parameter is
-removed from the QUERY_STRING.
+It will create an Mapserver application that runs through
+[Lighttpd](https://www.lighttpd.net/). With lua scripting the map=... QUERY_STRING
+is filter from incoming request. In other words the used Mapfile can only be set
+with an ENV.
 
 The included EPSG file containing the projection parameters only contains a
 small set of available EPSG code, namely the once used by our organization. If
@@ -116,6 +117,30 @@ docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 \
            -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map --rm -d \
            -p 80:80 --name mapserver-run-example -v `pwd`/example:/srv/data pdok/mapserver
 ```
+
+## Projections
+
+Altering the proj file is done for different reasons, adding custom projections
+or removing 'unused' ones for better performance. This can be done in a couple of
+ways through this setup.
+
+### base image
+
+The best example for this is the [Dockerfile.NL](/Dockerfile.NL) in this repository.
+This Dockerfile uses the main Dockerfile as a base image copies specific geodetic
+grid files and overwrites the default espg with a tuned one for the Netherlands.
+
+A good resource for these geodetic files is the [proj cdn](https://cdn.proj.org/).
+
+### volume
+
+Another option is to create a proj file (like in the [nl dir](/nl)) and mount
+this to the container and set the `PROJ_LIB` env to that location by adding the
+following parameters to the docker command.
+
+```-e PROJ_LIB=/path/in/container/to/proj/dir```
+
+```-v `pwd`/path/to/proj/dir:/path/in/container/to/proj/dir```
 
 ## Example
 
