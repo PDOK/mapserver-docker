@@ -38,7 +38,7 @@ MAP
       "ows_hoursofservice"               ""
       "ows_contactinstructions"          ""
       "ows_role"                         ""
-      "ows_srs"                          "EPSG:4326 EPSG:3857 EPSG:4258 EPSG:900913 CRS:84"
+      "ows_srs"                          "EPSG:4326 EPSG:3857 EPSG:4258 CRS:84"
       "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0"      
     END
   END
