@@ -138,9 +138,9 @@ Another option is to create a proj file (like in the [nl dir](/nl)) and mount
 this to the container and set the `PROJ_LIB` env to that location by adding the
 following parameters to the docker command.
 
-```-e PROJ_LIB=/path/in/container/to/proj/dir```
+```-e PROJ_LIB=/my-custom-proj-dir```
 
-```-v `pwd`/path/to/proj/dir:/path/in/container/to/proj/dir```
+```-v `pwd`/path/to/proj/dir:/my-custom-proj-dir```
 
 ## Example
 
