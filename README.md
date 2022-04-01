@@ -44,6 +44,40 @@ The included EPSG file containing the projection parameters only contains a
 small set of available EPSG code, namely the once used by our organization. If
 one wants to use additional EPSG projections one can overwrite this file.
 
+### Passing extra environment variables to MapServer
+
+If you need to pass extra parameters to MapServer (e.g. to be able to use GDAL's
+Virtual Filesystems), you can do so by mounting extra configuration files inside
+the container's `/etc/lighttpd/conf.d` directory. Make sure these files have the
+`.conf` extension.
+
+Example configuration snippet:
+
+```
+setenv.add-environment += (
+  "AWS_SECRET_ACCESS_KEY" => env.AWS_SECRET_ACCESS_KEY,
+  "AWS_ACCESS_KEY_ID"     => env.AWS_ACCESS_KEY_ID,
+  "AWS_S3_ENDPOINT"       => env.AWS_S3_ENDPOINT,
+)
+```
+
+Assuming the snippet is saved as `${PWD}/vsis3.conf`, you can run this container
+as follows:
+
+```shell
+docker run --rm -d \
+	-v "${PWD}/vsis3.conf":/etc/lighttpd/conf.d/vsis3.conf:ro \
+	-v some.mapfile:/s3-mapfile:ro \
+	-e AWS_S3_ENDPOINT=s3-host.example:9000 \
+	-e AWS_SECRET_ACCESS_KEY=secret_access_key \
+	-e AWS_ACCESS_KEY_ID=access_key_id \
+	-e MS_MAPFILE=/s3-mapfile \
+	pdok/mapserver
+```
+
+When using multiple includes, make sure to use the `+=` syntax, so you don't
+overwrite includes that came before.
+
 ## Docker image
 
 The Docker image contains 2 stages:
