@@ -15,7 +15,7 @@ RUN apt-get -y update && \
         libfreetype6-dev \
         libglib2.0-dev \
         libcairo2-dev \
-        git \        
+        git \
         locales \
         make \
         patch \
@@ -46,7 +46,7 @@ RUN apt-get -y update && \
         libgif-dev \
         libjpeg-dev \
         libpq-dev \
-        librsvg2-dev \      
+        librsvg2-dev \
         libpng-dev \
         libfreetype6-dev \
         libjpeg-dev \
@@ -109,7 +109,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_V8=OFF \
         -DBUILD_STATIC=OFF \
         -DLINK_STATIC_LIBMAPSERVER=OFF \
-        -DWITH_APACHE_MODULE=OFF \          
+        -DWITH_APACHE_MODULE=OFF \
         -DWITH_POINT_Z_M=ON \
         -DWITH_GENERIC_NINT=OFF \
         -DWITH_PROTOBUFC=ON \
@@ -118,7 +118,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4.53-buster as service
+FROM pdok/lighttpd:1.4.65 as service
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -126,7 +126,7 @@ ENV TZ Europe/Amsterdam
 
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib /usr/local/lib
-
+USER root
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -153,11 +153,15 @@ RUN apt-get -y update && \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
 
+
+
 COPY etc/lighttpd.conf /lighttpd.conf
 COPY etc/filter-map.lua /filter-map.lua
 
 RUN chmod o+x /usr/local/bin/mapserv
 RUN apt-get clean
+
+USER www
 
 ENV DEBUG 0
 ENV MIN_PROCS 1
