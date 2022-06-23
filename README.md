@@ -79,43 +79,54 @@ docker build -t pdok/mapserver:nl -f Dockerfile.NL .
 
 ### Run
 
-This image can be run straight from the CLI. A  volume needs to be mounted on
-the container directory /srv/data. The mounted volume needs to contain a
-mapserver *.map file that matches the MS_MAPFILE env.
+This image can be run straight from the command-line. A  volume needs to be mounted on
+the container directory `/srv/data`. The mounted volume needs to contain a
+mapserver `*.map` file that matches the `MS_MAPFILE` env var.
 
-```docker
-docker run -e MS_MAPFILE=/srv/data/example.map --rm -d \
-           -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
+```sh
+docker run \
+   --rm -d \
+   -e MS_MAPFILE=/srv/data/example.map \
+   -p 80:80 \
+   --name mapserver-example \
+   -v `pwd`/example:/srv/data \
+   pdok/mapserver
 ```
 
 Running the example above will create a service on the url
-<http://localhost/?request=getcapabilities&service=wms>
+<http://localhost/?REQUEST=GetCapabilities&SERVICE=WMS> that will accept something like a ([GetMap request](http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2.423859315589366403,54,9&CRS=EPSG:4326&WIDTH=1648&HEIGHT=1002&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE)).
 
-The ENV variables that can be set are the following
+The environment variables that can be set are the following:
 
-```env
-DEBUG
-MIN_PROCS
-MAX_PROCS
-MAX_LOAD_PER_PROC
-IDLE_TIMEOUT
-MS_MAPFILE
+- `DEBUG`
+- `MIN_PROCS`
+- `MAX_PROCS`
+- `MAX_LOAD_PER_PROC`
+- `IDLE_TIMEOUT`
+- `MS_MAPFILE`
+- `PROJ_LIB`
 
-PROJ_LIB
-```
+The environment variables, with the exception of `MS_MAPFILE` have a default value set in
+the [`Dockerfile`](./Dockerfile).
 
-The ENV variables, with the exception of MS_MAPFILE have a default value set in
-the Dockerfile.
-
-The [GDAL](https://gdal.org/) PROJ_LIB env is default set with the value
-/usr/share/proj. For performance reasons one would like to set a custom PROJ_LIB
+The [GDAL](https://gdal.org/) `PROJ_LIB` env var is default set with the value
+`/usr/share/proj`. For performance reasons one would like to set a custom `PROJ_LIB`
 containing a minimum of available EPSG codes. This can be done with the
-mentioned PROJ_LIB env.
+mentioned `PROJ_LIB` env var.
 
-```docker
-docker run -e DEBUG=0 -e MIN_PROCS=1 -e MAX_PROCS=3 -e MAX_LOAD_PER_PROC=4 \
-           -e IDLE_TIMEOUT=20 -e MS_MAPFILE=/srv/data/example.map --rm -d \
-           -p 80:80 --name mapserver-run-example -v `pwd`/example:/srv/data pdok/mapserver
+```sh
+docker run \
+   --rm -d \
+   -p 80:80 \
+   --name mapserver-run-example \
+   -v `pwd`/example:/srv/data \
+   -e DEBUG=0 \
+   -e MIN_PROCS=1 \
+   -e MAX_PROCS=3 \
+   -e MAX_LOAD_PER_PROC=4 \
+   -e IDLE_TIMEOUT=20 \
+   -e MS_MAPFILE=/srv/data/example.map \
+   pdok/mapserver
 ```
 
 ## Projections
@@ -130,61 +141,44 @@ The best example for this is the [Dockerfile.NL](/Dockerfile.NL) in this reposit
 This Dockerfile uses the main Dockerfile as a base image copies specific geodetic
 grid files and overwrites the default espg with a tuned one for the Netherlands.
 
-A good resource for these geodetic files is the [proj cdn](https://cdn.proj.org/).
+A good resource for these geodetic files is the [PROJ.org Datumgrid CDN](https://cdn.proj.org/).
 
 ### volume
 
-Another option is to create a proj file (like in the [nl dir](/nl)) and mount
-this to the container and set the `PROJ_LIB` env to that location by adding the
-following parameters to the docker command.
+Another option is to create a proj file (like in the [`nl`](/nl) folder) and mount
+this to the container and set the `PROJ_LIB` env var to that location by adding the
+following parameters to the docker command:
 
-```-e PROJ_LIB=/my-custom-proj-dir```
-
-```-v `pwd`/path/to/proj/dir:/my-custom-proj-dir```
+```sh
+-e PROJ_LIB=/my-custom-proj-dir \
+-v `pwd`/path/to/proj/dir:/my-custom-proj-dir \
+```
 
 ## Example
 
-When starting the container it will create a WMS & WFS service on the end-point
+When starting the container it will create a WMS & WFS service on the accespoint: `http://localhost`.
 
-```html
-http://localhost?
-```
+### Example requests
 
-### Example request
-
-```html
-http://localhost/?request=getfeature&service=wfs&VERSION=2.0.0&typename=example:example&count=1
-```
-
-```html
-http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2,54,9&CRS=EPSG:4326&WIDTH=905&HEIGHT=517&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE
-```
-
-```html
-http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.9306039592783506,0.48758765231731171,55.46504193821721884,12.33319204541738756&CRS=EPSG:4326&WIDTH=1530&HEIGHT=844&LAYERS=example&STYLES=&FORMAT=image/png&QUERY_LAYERS=example&INFO_FORMAT=text/html&I=389&J=537&FEATURE_COUNT=10
-```
+- [`http://localhost/?SERVICE=WFS&REQUEST=GetCapabilities`](http://localhost/?SERVICE=WFS&REQUEST=GetCapabilities)
+- [`http://localhost/?SERVICE=WMS&REQUEST=GetCapabilities`](http://localhost/?SERVICE=WMS&REQUEST=GetCapabilities)
+- [`http://localhost/?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=example:example&COUNT=1`](http://localhost/?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=example:example&COUNT=1)
+- [`http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2,54,9&CRS=EPSG:4326&WIDTH=905&HEIGHT=517&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE`](http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2,54,9&CRS=EPSG:4326&WIDTH=905&HEIGHT=517&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE)
+- [`http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.9306039592783506,0.48758765231731171,55.46504193821721884,12.33319204541738756&CRS=EPSG:4326&WIDTH=1530&HEIGHT=844&LAYERS=example&STYLES=&FORMAT=image/png&QUERY_LAYERS=example&INFO_FORMAT=text/html&I=389&J=537&FEATURE_COUNT=10`](http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.9306039592783506,0.48758765231731171,55.46504193821721884,12.33319204541738756&CRS=EPSG:4326&WIDTH=1530&HEIGHT=844&LAYERS=example&STYLES=&FORMAT=image/png&QUERY_LAYERS=example&INFO_FORMAT=text/html&I=389&J=537&FEATURE_COUNT=10)
 
 ## Misc
 
 ### Why Lighttpd
 
-In our previous configurations we would run NGINX, while this is a good web
+In our previous configurations we would run [NGINX](https://www.nginx.com/), while this is a good web
 service and has a lot of configuration options, it runs with multiple processes.
-There for we needed supervisord for managing this, whereas Lighttpd runs as a
+There for we needed supervisord for managing this, whereas [lighttpd](https://www.lighttpd.net/) runs as a
 single process. Also all the routing configuration options aren't needed,
 because that is handled by the infrastructure/platform, like
 [Kubernetes](https://kubernetes.io/). If one would like to configure some simple
 routing is still can be done in the lighttpd.conf.
 
-### How to Contribute
-
-Make a pull request...
-
-### Contact
-
-Contacting the maintainers can be done through the issue tracker.
-
 ### Used examples
 
-* <https://github.com/srounet/docker-mapserver>
-* <https://github.com/Amsterdam/mapserver>
+- <https://github.com/srounet/docker-mapserver>
+- <https://github.com/Amsterdam/mapserver>
