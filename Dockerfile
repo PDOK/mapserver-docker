@@ -153,8 +153,6 @@ RUN apt-get -y update && \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
 
-
-
 COPY etc/lighttpd.conf /lighttpd.conf
 COPY etc/filter-map.lua /filter-map.lua
 

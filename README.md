@@ -160,9 +160,9 @@ When starting the container it will create a WMS & WFS service on the accespoint
 
 ### Example requests
 
-- [`http://localhost?service=wfss&request=getcapabilities`](http://localhost?service=wfss&request=getcapabilities)
-- [`http://localhost?service=wms&request=getcapabilities`](http://localhost?service=wms&request=getcapabilities)
-- [`http://localhost/?request=getfeature&service=wfs&VERSION=2.0.0&typename=example:example&count=1`](http://localhost/?request=getfeature&service=wfs&VERSION=2.0.0&typename=example:example&count=1)
+- [`http://localhost/?SERVICE=WFS&REQUEST=GetCapabilities`](http://localhost/?SERVICE=WFS&REQUEST=GetCapabilities)
+- [`http://localhost/?SERVICE=WMS&REQUEST=GetCapabilities`](http://localhost/?SERVICE=WMS&REQUEST=GetCapabilities)
+- [`http://localhost/?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=example:example&COUNT=1`](http://localhost/?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=example:example&COUNT=1)
 - [`http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2,54,9&CRS=EPSG:4326&WIDTH=905&HEIGHT=517&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE`](http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2,54,9&CRS=EPSG:4326&WIDTH=905&HEIGHT=517&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE)
 - [`http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.9306039592783506,0.48758765231731171,55.46504193821721884,12.33319204541738756&CRS=EPSG:4326&WIDTH=1530&HEIGHT=844&LAYERS=example&STYLES=&FORMAT=image/png&QUERY_LAYERS=example&INFO_FORMAT=text/html&I=389&J=537&FEATURE_COUNT=10`](http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&BBOX=48.9306039592783506,0.48758765231731171,55.46504193821721884,12.33319204541738756&CRS=EPSG:4326&WIDTH=1530&HEIGHT=844&LAYERS=example&STYLES=&FORMAT=image/png&QUERY_LAYERS=example&INFO_FORMAT=text/html&I=389&J=537&FEATURE_COUNT=10)
 
