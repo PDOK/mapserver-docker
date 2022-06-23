@@ -94,7 +94,7 @@ docker run \
 ```
 
 Running the example above will create a service on the url
-<http://localhost/?request=getcapabilities&service=wms> ([GetMap request](http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2.423859315589366403,54,9&CRS=EPSG:4326&WIDTH=1648&HEIGHT=1002&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE)).
+<http://localhost/?REQUEST=GetCapabilities&SERVICE=WMS> that will accept something like a ([GetMap request](http://localhost/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=50,2.423859315589366403,54,9&CRS=EPSG:4326&WIDTH=1648&HEIGHT=1002&LAYERS=example&STYLES=&FORMAT=image/png&DPI=96&MAP_RESOLUTION=96&FORMAT_OPTIONS=dpi:96&TRANSPARENT=TRUE)).
 
 The environment variables that can be set are the following:
 
