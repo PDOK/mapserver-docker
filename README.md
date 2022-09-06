@@ -7,6 +7,8 @@ release](https://img.shields.io/github/release/PDOK/mapserver-docker.svg)](https
 [![Docker
 Pulls](https://img.shields.io/docker/pulls/pdok/mapserver.svg)](https://hub.docker.com/r/pdok/mapserver)
 
+[Mapserver](https://mapserver.org/) [Docker](https://www.docker.com/) image using [lighttpd](https://www.lighttpd.net/) build with [GDAL/OGR](https://gdal.org/), [PostGIS](https://postgis.net/) to serve out WMS, WFS and WCS services. 
+
 ## TL;DR
 
 ```docker
@@ -36,7 +38,7 @@ in FastCGI and are based on Apache.
 ## What will it do
 
 It will create an Mapserver application that runs through
-[Lighttpd](https://www.lighttpd.net/). With lua scripting the map=... QUERY_STRING
+[lighttpd](https://www.lighttpd.net/). With lua scripting the map=... QUERY_STRING
 is filter from incoming request. In other words the used Mapfile can only be set
 with an ENV.
 
@@ -60,7 +62,7 @@ disabled.
 ### service
 
 The service stage copies the Mapserver application, build in the first stage to
-the service stage, and configures Lighttpd
+the service stage, and configures lighttpd
 
 ## Usage
 
