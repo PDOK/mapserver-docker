@@ -7,15 +7,13 @@ release](https://img.shields.io/github/release/PDOK/mapserver-docker.svg)](https
 [![Docker
 Pulls](https://img.shields.io/docker/pulls/pdok/mapserver.svg)](https://hub.docker.com/r/pdok/mapserver)
 
-[Mapserver](https://mapserver.org/) [Docker](https://www.docker.com/) image using [lighttpd](https://www.lighttpd.net/) build with [GDAL/OGR](https://gdal.org/), [PostGIS](https://postgis.net/) to serve out WMS, WFS and WCS services. 
+[Mapserver](https://mapserver.org/) [Docker](https://www.docker.com/) image using [lighttpd](https://www.lighttpd.net/) build with [GDAL/OGR](https://gdal.org/), [PostGIS](https://postgis.net/) to serve out WMS, WFS and WCS services.
 
 ## TL;DR
 
 ```docker
 docker build -t pdok/mapserver .
-docker run -e MS_MAPFILE=/srv/data/example.map --rm -d \
-            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
-
+docker run -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf -e MS_MAPFILE=/srv/data/example.map --rm -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
 docker stop mapserver-example
 ```
 
@@ -88,6 +86,7 @@ mapserver `*.map` file that matches the `MS_MAPFILE` env var.
 ```sh
 docker run \
    --rm -d \
+   -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf \
    -e MS_MAPFILE=/srv/data/example.map \
    -p 80:80 \
    --name mapserver-example \
@@ -127,6 +126,7 @@ docker run \
    -e MAX_PROCS=3 \
    -e MAX_LOAD_PER_PROC=4 \
    -e IDLE_TIMEOUT=20 \
+   -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf \
    -e MS_MAPFILE=/srv/data/example.map \
    pdok/mapserver
 ```

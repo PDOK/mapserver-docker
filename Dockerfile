@@ -1,4 +1,4 @@
-FROM debian:buster as builder
+FROM debian:bullseye as builder
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -15,6 +15,9 @@ RUN apt-get -y update && \
         libfreetype6-dev \
         libglib2.0-dev \
         libcairo2-dev \
+        sqlite3 \
+        libsqlite3-dev \
+        libtiff5-dev \
         git \
         locales \
         make \
@@ -28,7 +31,7 @@ RUN apt-get -y update && \
 
 RUN update-locale LANG=C.UTF-8
 
-ENV HARFBUZZ_VERSION 2.8.2
+ENV HARFBUZZ_VERSION="5.3.0"
 
 RUN cd /tmp && \
         wget https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION/harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
@@ -38,6 +41,34 @@ RUN cd /tmp && \
         make && \
         make install && \
         ldconfig
+
+ENV PROJ_VERSION="9.1.0"
+
+ENV GDAL_VERSION="3.5.2"
+
+RUN wget https://github.com/OSGeo/PROJ/releases/download/${PROJ_VERSION}/proj-${PROJ_VERSION}.tar.gz
+
+RUN wget https://github.com/OSGeo/gdal/releases/download/v${GDAL_VERSION}/gdal-${GDAL_VERSION}.tar.gz
+
+RUN apt-get -y update && \
+    apt-get install -y --no-install-recommends \
+        libcurl4-gnutls-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Build proj
+RUN tar xzvf proj-${PROJ_VERSION}.tar.gz && \
+    cd /proj-${PROJ_VERSION} && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && make -j$(nproc) && make install
+
+# Build gdal
+RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
+    cd /gdal-${GDAL_VERSION} && \
+    mkdir build && \
+    cd build && \    
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && \
+    make -j$(nproc) && make install
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
@@ -52,19 +83,18 @@ RUN apt-get -y update && \
         libjpeg-dev \
         libexempi-dev \
         libfcgi-dev \
-        libgdal-dev \
         libgeos-dev \
-        libproj-dev \
         librsvg2-dev \
         libprotobuf-dev \
         libprotobuf-c-dev \
         libprotobuf-c1 \
+        libprotobuf23 \
         libxslt1-dev && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get -y update --fix-missing
 
-RUN git clone --single-branch -b pdok-7-6-4-patch-5 https://github.com/pdok/mapserver/ /usr/local/src/mapserver
+RUN git clone --single-branch -b branch-8-0 https://github.com/mapserver/mapserver/ /usr/local/src/mapserver
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
@@ -118,7 +148,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4.65-buster as service
+FROM pdok/lighttpd:1.4.67-bullseye as service
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -126,6 +156,8 @@ ENV TZ Europe/Amsterdam
 
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib /usr/local/lib
+COPY --from=builder /usr/local/share/proj /usr/local/share/proj
+
 USER root
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
@@ -133,20 +165,20 @@ RUN apt-get -y update && \
         libpng16-16 \
         python-cairocffi-doc \
         libfreetype6 \
+        libgif7 \
         libjpeg62-turbo \
         libfcgi0ldbl \
         libfribidi0 \
-        libgdal20 \
         libgeos-c1v5 \
         libglib2.0-0 \
-        libproj13 \
         libxml2 \
         libxslt1.1 \
         libexempi8 \
         libpq5 \
+        libcurl3-gnutls \
         libfreetype6 \
         librsvg2-2 \
-        libprotobuf17 \
+        libprotobuf23 \
         libprotobuf-c1 \
         gettext-base \
         wget \

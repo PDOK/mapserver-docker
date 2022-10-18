@@ -4,7 +4,7 @@ MAP
   EXTENT        2 50 9 54
   UNITS         meters
   STATUS        ON
-  SIZE          5000 5000
+  SIZE          4000 4000
   
   ## global debug settings for mapserver, remove comment in lines below to enable
   # DEBUG         4         # https://mapserver.org/optimization/debugging.html
