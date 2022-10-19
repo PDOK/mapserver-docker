@@ -187,6 +187,8 @@ RUN apt-get -y update && \
 
 COPY etc/lighttpd.conf /lighttpd.conf
 COPY etc/filter-map.lua /filter-map.lua
+COPY etc/400.lua /400.lua
+COPY etc/400-invalid-service-type.lua /400-invalid-service-type.lua
 
 RUN chmod o+x /usr/local/bin/mapserv
 RUN apt-get clean
