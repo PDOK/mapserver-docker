@@ -17,7 +17,9 @@ RUN apt-get -y update && \
         libcairo2-dev \
         sqlite3 \
         libsqlite3-dev \
+        libspatialite-dev \
         libtiff5-dev \
+        libcurl4-gnutls-dev \
         git \
         locales \
         make \
@@ -50,11 +52,6 @@ RUN wget https://github.com/OSGeo/PROJ/releases/download/${PROJ_VERSION}/proj-${
 
 RUN wget https://github.com/OSGeo/gdal/releases/download/v${GDAL_VERSION}/gdal-${GDAL_VERSION}.tar.gz
 
-RUN apt-get -y update && \
-    apt-get install -y --no-install-recommends \
-        libcurl4-gnutls-dev && \
-    rm -rf /var/lib/apt/lists/*
-
 # Build proj
 RUN tar xzvf proj-${PROJ_VERSION}.tar.gz && \
     cd /proj-${PROJ_VERSION} && \
@@ -72,7 +69,6 @@ RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
-        libcurl4-gnutls-dev \
         libfribidi-dev \
         libgif-dev \
         libjpeg-dev \
@@ -143,10 +139,13 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_POINT_Z_M=ON \
         -DWITH_GENERIC_NINT=OFF \
         -DWITH_PROTOBUFC=ON \
-        -DCMAKE_PREFIX_PATH=/opt/gdal && \
-    make && \
-    make install && \
-    ldconfig
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_PREFIX_PATH=/build:/build/proj:/usr/local:/opt \
+        -DPROJ_INCLUDE_DIR=/usr/local/include -DPROJ_LIBRARY=/usr/local/lib/libproj.so \ 
+        -DGDAL_INCLUDE_DIR=/usr/local/include -DGDAL_LIBRARY=/usr/local/lib/libgdal.so \ 
+        ../ > ../configure.out.txt && \
+        make -j$(nproc) && make install && ldconfig
+
 
 FROM pdok/lighttpd:1.4.67-bullseye as service
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
@@ -180,6 +179,7 @@ RUN apt-get -y update && \
         librsvg2-2 \
         libprotobuf23 \
         libprotobuf-c1 \
+        libspatialite7 \
         gettext-base \
         wget \
         gnupg && \
