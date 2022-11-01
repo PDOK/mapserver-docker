@@ -118,7 +118,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4.66-buster as service
+FROM pdok/lighttpd:1.4.67-buster as service
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND noninteractive
