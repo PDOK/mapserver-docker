@@ -118,7 +118,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4.67-buster as service
+FROM pdok/lighttpd:1.4.65-buster-patch3 as service
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -161,7 +161,6 @@ COPY etc/400-invalid-service-type.lua /400-invalid-service-type.lua
 RUN chmod o+x /usr/local/bin/mapserv
 RUN apt-get clean
 
-USER www
 
 ENV DEBUG 0
 ENV MIN_PROCS 1
