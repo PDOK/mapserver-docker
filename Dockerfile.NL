@@ -1,4 +1,4 @@
-FROM pdok/lighttpd:1.4.65-buster-patch3
+FROM pdok/mapserver:7.6.4-patch5-3-buster-lighttpd
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 RUN wget https://github.com/OSGeo/proj-datumgrid/releases/download/europe-1.6/proj-datumgrid-europe-1.6.tar.gz && \
