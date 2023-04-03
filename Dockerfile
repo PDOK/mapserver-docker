@@ -1,7 +1,6 @@
-FROM pdok/lighttpd:1.4.67
+FROM debian:buster as builder
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
-USER root
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
 
@@ -118,6 +117,17 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make && \
     make install && \
     ldconfig
+
+FROM pdok/lighttpd:1.4.67 AS service
+
+USER root
+LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV TZ Europe/Amsterdam
+
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /usr/local/lib /usr/local/lib
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \

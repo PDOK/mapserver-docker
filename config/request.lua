@@ -62,10 +62,11 @@ if lighty.env["request.method"] == "GET" then
     if service ~= serviceType then
         return 404
     end
-    else
-    -- redirect all non-GET request to MapServer
-    if lighty.env["uri.path"] ~= "/mapserver" then
-       lighty.env["request.uri"] = "/mapserver"
-        return lighty.RESTART_REQUEST
-    end
+
+  else
+  -- redirect all non-GET request to MapServer
+  if lighty.env["uri.path"] ~= "/mapserver" then
+     lighty.env["request.uri"] = "/mapserver"
+      return lighty.RESTART_REQUEST
+  end
 end
