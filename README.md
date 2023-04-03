@@ -11,11 +11,22 @@ Pulls](https://img.shields.io/docker/pulls/pdok/mapserver.svg)](https://hub.dock
 
 ## TL;DR
 
-```docker
+### docker build
+```
 docker build -t pdok/mapserver .
-docker run -e MS_MAPFILE=/srv/data/example.map --rm -d \
-            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
-
+```
+### docker run wms
+```
+docker run -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WMS  --rm -d \
+            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver 
+```
+### docker run wfs
+```
+docker run -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WFS  --rm -d \
+            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver 
+```
+### docker stop
+```
 docker stop mapserver-example
 ```
 

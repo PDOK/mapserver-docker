@@ -1,6 +1,7 @@
-FROM debian:buster as builder
+FROM pdok/lighttpd:1.4.67
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
+USER root
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ Europe/Amsterdam
 
@@ -118,15 +119,6 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4.65-buster-patch3 as service
-LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
-
-ENV DEBIAN_FRONTEND noninteractive
-ENV TZ Europe/Amsterdam
-
-COPY --from=builder /usr/local/bin /usr/local/bin
-COPY --from=builder /usr/local/lib /usr/local/lib
-USER root
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -153,21 +145,20 @@ RUN apt-get -y update && \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
 
-COPY etc/lighttpd.conf /lighttpd.conf
-COPY etc/filter-map.lua /filter-map.lua
-COPY etc/400.lua /400.lua
-COPY etc/400-invalid-service-type.lua /400-invalid-service-type.lua
+ADD config/lighttpd.conf /srv/mapserver/config/lighttpd.conf
+ADD config/include.conf /srv/mapserver/config/include.conf
+ADD config/request.lua /srv/mapserver/config/request.lua
 
 RUN chmod o+x /usr/local/bin/mapserv
 RUN apt-get clean
+USER www
 
-
-ENV DEBUG 0
-ENV MIN_PROCS 1
-ENV MAX_PROCS 3
-ENV MAX_LOAD_PER_PROC 4
+ENV DEBUG 5
+ENV MIN_PROCS 4
+ENV MAX_PROCS 8
+ENV MAX_LOAD_PER_PROC 1
 ENV IDLE_TIMEOUT 20
 
 EXPOSE 80
 
-CMD ["lighttpd", "-D", "-f", "/lighttpd.conf"]
+CMD ["lighttpd", "-D", "-f", "/srv/mapserver/config/lighttpd.conf"]
