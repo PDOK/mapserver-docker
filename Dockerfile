@@ -153,7 +153,7 @@ RUN chmod o+x /usr/local/bin/mapserv
 RUN apt-get clean
 USER www
 
-ENV DEBUG 5
+ENV DEBUG 0
 ENV MIN_PROCS 4
 ENV MAX_PROCS 8
 ENV MAX_LOAD_PER_PROC 1
