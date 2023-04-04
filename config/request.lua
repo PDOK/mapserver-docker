@@ -1,6 +1,13 @@
 path = lighty.env["uri.path"]
 query = lighty.env["uri.query"]
 
+-- obtain service type from environment
+serviceType = os.getenv('SERVICE_TYPE')
+if serviceType == nil then
+    print('SERVICE_TYPE environment variable is missing')
+    return 500
+end
+
 -- redirect to MapServer
 if path ~= "/mapserver" then
     lighty.env["request.uri"] = "/mapserver?" .. query
@@ -24,13 +31,6 @@ end
 lighty.env["uri.query"] = newQuery:sub(1, -2)
 
 if lighty.env["request.method"] == "GET" then
-
-    -- obtain service type from environment
-    serviceType = os.getenv('SERVICE_TYPE')
-    if serviceType == nil then
-        print('SERVICE_TYPE environment variable is missing')
-        return 500
-    end
 
     serviceType = serviceType:lower()
 
