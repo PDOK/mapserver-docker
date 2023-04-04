@@ -1,3 +1,28 @@
+path = lighty.env["uri.path"]
+query = lighty.env["uri.query"]
+
+-- redirect to MapServer
+if path ~= "/mapserver" then
+    lighty.env["request.uri"] = "/mapserver?" .. query
+    return lighty.RESTART_REQUEST
+end
+
+-- parse and rewrite query string
+params = {}
+newQuery = ''
+for k, v in query:gmatch("([^?&=]+)=([^&]+)") do
+    k = k:lower()
+
+    params[k] = v
+
+    -- remove map parameter from query
+    if k ~= 'map' then
+        newQuery = newQuery .. k .. '=' .. v .. '&'
+    end
+end
+
+lighty.env["uri.query"] = newQuery:sub(1, -2)
+
 if lighty.env["request.method"] == "GET" then
 
     -- obtain service type from environment
@@ -9,36 +34,10 @@ if lighty.env["request.method"] == "GET" then
 
     serviceType = serviceType:lower()
 
-    path = lighty.env["uri.path"]
-    query = lighty.env["uri.query"]
-
-
     -- check if query is present
     if not query then
         return 400
     end
-
-    -- redirect to MapServer
-    if path ~= "/mapserver" then
-        lighty.env["request.uri"] = "/mapserver?" .. query
-        return lighty.RESTART_REQUEST
-    end
-
-    -- parse and rewrite query string
-    params = {}
-    newQuery = ''
-    for k, v in query:gmatch("([^?&=]+)=([^&]+)") do
-        k = k:lower()
-
-        params[k] = v
-
-        -- remove map parameter from query
-        if k ~= 'map' then
-            newQuery = newQuery .. k .. '=' .. v .. '&'
-        end
-    end
-
-    lighty.env["uri.query"] = newQuery:sub(1, -2)
 
     -- assign service and version default values
     version = params['version']
@@ -63,10 +62,4 @@ if lighty.env["request.method"] == "GET" then
         return 404
     end
 
-  else
-  -- redirect all non-GET request to MapServer
-  if lighty.env["uri.path"] ~= "/mapserver" then
-     lighty.env["request.uri"] = "/mapserver"
-      return lighty.RESTART_REQUEST
-  end
 end
