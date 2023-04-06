@@ -8,12 +8,6 @@ if serviceType == nil then
     return 500
 end
 
--- redirect to MapServer
-if path ~= "/mapserver" then
-    lighty.env["request.uri"] = "/mapserver?" .. query
-    return lighty.RESTART_REQUEST
-end
-
 -- parse and rewrite query string
 params = {}
 newQuery = ''
@@ -28,7 +22,9 @@ for k, v in query:gmatch("([^?&=]+)=([^&]+)") do
     end
 end
 
-lighty.env["uri.query"] = newQuery:sub(1, -2)
+if newQuery ~= '' then
+    lighty.env["uri.query"] = newQuery:sub(1, -2)
+end
 
 if lighty.env["request.method"] == "GET" then
 
