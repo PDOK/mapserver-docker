@@ -29,7 +29,7 @@ if lighty.r.req_attr["uri.path"] == "/mapserver" then
     end
 
     if lighty.r.req_attr["request.method"] == "GET" then
-        if not lighty.r.req_attr["uri.query"] or lighty.r.req_attr["uri.query"] == '' or not params['service'] then
+        if not lighty.r.req_attr["uri.query"] then
             return 400
         end
     end
