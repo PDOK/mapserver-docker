@@ -1,61 +1,36 @@
-path = lighty.env["uri.path"]
-query = lighty.env["uri.query"]
-
 -- obtain service type from environment
 serviceType = os.getenv('SERVICE_TYPE')
-if serviceType == nil then
+if not serviceType then
     print('SERVICE_TYPE environment variable is missing')
     return 500
 end
 
--- parse and rewrite query string
-params = {}
-newQuery = ''
-for k, v in query:gmatch("([^?&=]+)=([^&]+)") do
-    k = k:lower()
+if lighty.r.req_attr["uri.path"] == "/mapserver" then
+    params = {}
+    -- parse and rewrite query string
+    if lighty.r.req_attr["uri.query"] then
+        newQuery = ''
+        for k, v in lighty.r.req_attr["uri.query"]:gmatch("([^?&=]+)=([^&]+)") do
+            k = k:lower()
 
-    params[k] = v
+            params[k] = v
 
-    -- remove map parameter from query
-    if k ~= 'map' then
-        newQuery = newQuery .. k .. '=' .. v .. '&'
-    end
-end
+            -- remove map parameter from query
+            if k ~= 'map' then
+                newQuery = newQuery .. k .. '=' .. v .. '&'
+            end
+        end
 
-if newQuery ~= '' then
-    lighty.env["uri.query"] = newQuery:sub(1, -2)
-end
-
-if lighty.env["request.method"] == "GET" then
-
-    serviceType = serviceType:lower()
-
-    -- check if query is present
-    if not query then
-        return 400
+        lighty.r.req_attr["uri.query"] = newQuery:sub(1, -2)
     end
 
-    -- assign service and version default values
-    version = params['version']
-    service = params['service']
-
-    if service == nil then
-        service = serviceType
-    else
-        service = service:lower()
-    end
-
-    if (service == 'wms' and (version == nil or version ~= '1.1.1')) then
-        version = '1.3.0'
-    end
-
-    if (service == 'wfs' and (version == nil or (version ~= '1.0.0' and version ~= '1.1.0'))) then
-        version = '2.0.0'
-    end
-
-    -- check if current request matches configured service type
-    if service ~= serviceType then
+    if params['service'] and params['service']:lower() ~= serviceType:lower() then
         return 404
     end
 
+    if lighty.r.req_attr["request.method"] == "GET" then
+        if not lighty.r.req_attr["uri.query"] or lighty.r.req_attr["uri.query"] == '' or not params['service'] then
+            return 400
+        end
+    end
 end
