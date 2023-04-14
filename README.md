@@ -184,7 +184,7 @@ adding the following parameters to the docker command:
 ## Example
 
 When starting the container it will create a WMS & WFS service on the
-accespoint: `http://localhost`.
+accespoint: `http://localhost/mapserver`.
 
 ### Example requests
 
