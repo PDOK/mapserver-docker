@@ -2,9 +2,9 @@ name: build
 env:
   image: pdok/mapserver
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types:
+      - [created]
 jobs:
   docker:
     runs-on: ubuntu-latest
