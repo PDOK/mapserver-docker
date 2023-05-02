@@ -1,4 +1,4 @@
-FROM pdok/mapserver:7.6.4-patch-5-4
+FROM pdok/mapserver:7.6.4-patch-5-5
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 USER root
 RUN wget https://github.com/OSGeo/proj-datumgrid/releases/download/europe-1.6/proj-datumgrid-europe-1.6.tar.gz && \
