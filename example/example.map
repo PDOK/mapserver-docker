@@ -4,7 +4,7 @@ MAP
   EXTENT        2 50 9 54
   UNITS         meters
   STATUS        ON
-  SIZE          5000 5000
+  SIZE          4000 4000
   
   ## global debug settings for mapserver, remove comment in lines below to enable
   # DEBUG         4         # https://mapserver.org/optimization/debugging.html
@@ -133,6 +133,7 @@ MAP
 
   WEB
     METADATA
+      "ows_sld_enabled"                "false"
       "ows_title"                      "Example"
       "ows_abstract"                   "Service containing a example"
       "ows_keywordlist"                "example,unknown"
@@ -144,6 +145,7 @@ MAP
       "wfs_maxfeatures"                "1000"
       "wfs_onlineresource"             "http://localhost"
 
+      "wms_allow_getmap_without_styles" "true"
       "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml"
       "wms_enable_request"             "* !GetStyles !DescribeLayer"
       "wms_bbox_extended"              "true"

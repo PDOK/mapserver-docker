@@ -23,14 +23,14 @@ docker build -t pdok/mapserver .
 ### docker run wms
 
 ```shell
-docker run -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WMS  --rm -d \
-            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver 
+docker run -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WMS --rm -d \
+            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
 ```
 
 ### docker run wfs
 
 ```shell
-docker run -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WFS  --rm -d \
+docker run -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WFS  --rm -d \
             -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver 
 ```
 
