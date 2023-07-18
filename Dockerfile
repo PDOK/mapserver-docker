@@ -1,4 +1,4 @@
-FROM debian:bullseye as builder
+FROM debian:bookworm as builder
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -44,11 +44,7 @@ RUN cd /tmp && \
 
 ENV PROJ_VERSION="9.2.0"
 
-ENV GDAL_VERSION="3.6.2"
-
 RUN wget https://github.com/OSGeo/PROJ/releases/download/${PROJ_VERSION}/proj-${PROJ_VERSION}.tar.gz
-
-RUN wget https://github.com/OSGeo/gdal/releases/download/v${GDAL_VERSION}/gdal-${GDAL_VERSION}.tar.gz
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
@@ -62,13 +58,6 @@ RUN tar xzvf proj-${PROJ_VERSION}.tar.gz && \
     cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && make -j$(nproc) && make install
 
-# Build gdal
-RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
-    cd /gdal-${GDAL_VERSION} && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && \
-    make -j$(nproc) && make install
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
@@ -83,12 +72,13 @@ RUN apt-get -y update && \
         libjpeg-dev \
         libexempi-dev \
         libfcgi-dev \
+        libgdal-dev \
         libgeos-dev \
         librsvg2-dev \
         libprotobuf-dev \
         libprotobuf-c-dev \
         libprotobuf-c1 \
-        libprotobuf23 \
+        libprotobuf32 \
         libxslt1-dev && \
     rm -rf /var/lib/apt/lists/*
 
@@ -148,7 +138,8 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM lighttpd AS service
+#local image lighttpd build from https://github.com/PDOK/lighttpd-docker/tree/PDOK-14748_mapserver_8
+FROM lighttpd:1 AS service
 
 USER root
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
@@ -170,6 +161,7 @@ RUN apt-get -y update && \
         libjpeg62-turbo \
         libfcgi0ldbl \
         libfribidi0 \
+        libgdal32 \
         libgeos-c1v5 \
         libglib2.0-0 \
         libxml2 \
@@ -179,10 +171,11 @@ RUN apt-get -y update && \
         libcurl3-gnutls \
         libfreetype6 \
         librsvg2-2 \
-        libprotobuf23 \
+        libprotobuf32 \
         libprotobuf-c1 \
         gettext-base \
         libsqlite3-mod-spatialite \
+        gdal-bin \
         wget \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
