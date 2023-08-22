@@ -84,7 +84,9 @@ RUN apt-get -y update && \
 
 RUN apt-get -y update --fix-missing
 
-RUN git clone -b branch-8-0 https://github.com/MapServer/mapserver.git /usr/local/src/mapserver
+RUN mkdir /usr/local/src/mapserver
+RUN wget https://github.com/MapServer/MapServer/releases/download/rel-8-0-1/mapserver-8.0.1.tar.gz
+RUN tar -xf mapserver-8.0.1.tar.gz --strip-components 1  -C /usr/local/src/mapserver
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
@@ -177,6 +179,7 @@ RUN apt-get -y update && \
         libsqlite3-mod-spatialite \
         gdal-bin \
         wget \
+        sqlite3 \
         gnupg && \
     rm -rf /var/lib/apt/lists/*
 
