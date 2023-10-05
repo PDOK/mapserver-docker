@@ -1,0 +1,208 @@
+MAP
+    NAME          ""
+    CONFIG        "MS_ERRORFILE" "stderr"
+    EXTENT        -9.976430 30.008374 15.984777 69.973999
+    UNITS         dd
+    STATUS        ON
+    SIZE          4000 4000
+    
+    ## global debug settings for mapserver, remove comment in lines below to enable
+    # DEBUG         4         # https://mapserver.org/optimization/debugging.html
+    # CONFIG "CPL_DEBUG" "ON" # GDAL
+  
+    RESOLUTION 91
+    DEFRESOLUTION 91
+  
+    PROJECTION
+      "init=epsg:4258"
+    END
+  
+    WEB
+      METADATA
+        "ows_enable_request"               "*"
+        "ows_fees"                         "NONE"
+        "ows_contactorganization"          "Unknown"
+        "ows_schemas_location"             "http://schemas.opengis.net"
+        "ows_service_onlineresource"       "http://localhost"
+        "ows_contactperson"                "ContactCenter Unknown"
+        "ows_contactposition"              "pointOfContact"
+        "ows_contactvoicetelephone"        ""
+        "ows_contactfacsimiletelephone"    ""
+        "ows_addresstype"                  ""
+        "ows_address"                      ""
+        "ows_city"                         "City"
+        "ows_stateorprovince"              ""
+        "ows_postcode"                     ""
+        "ows_country"                      "Country"
+        "ows_contactelectronicmailaddress" "example@unknown.org"
+        "ows_hoursofservice"               ""
+        "ows_contactinstructions"          ""
+        "ows_role"                         ""
+        "ows_srs"                          "EPSG:4258 EPSG:28992"
+        "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0"      
+      END
+    END
+  
+   # outputformat used by WMS GetFeatureInfo and the WFS GetFeature requests
+    OUTPUTFORMAT
+      NAME "GEOJSON"       # format name (visible as format in the 1.0.0 capabilities)
+      DRIVER "OGR/GEOJSON"
+      MIMETYPE "application/json; subtype=geojson"
+      FORMATOPTION "STORAGE=stream"
+      FORMATOPTION "FORM=SIMPLE"
+      FORMATOPTION "USE_FEATUREID=true"
+      FORMATOPTION "LCO:ID_FIELD=fid"
+      FORMATOPTION "LCO:ID_TYPE=STRING"
+    END
+  
+    # outputformat used by WMS GetFeatureInfo and the WFS GetFeature requests
+    OUTPUTFORMAT
+      NAME "JSON"
+      DRIVER "OGR/GEOJSON"
+      MIMETYPE "application/json"
+      FORMATOPTION "STORAGE=stream"
+      FORMATOPTION "FORM=SIMPLE"
+      FORMATOPTION "USE_FEATUREID=true"
+      FORMATOPTION "LCO:ID_FIELD=fid"
+      FORMATOPTION "LCO:ID_TYPE=STRING"
+    END
+  
+    # outputformat used by WMS GetFeatureInfo request, not the WFS GetFeature requests
+    OUTPUTFORMAT
+      NAME "XML"
+      DRIVER "OGR/GML"
+      MIMETYPE "text/xml"
+      FORMATOPTION "STORAGE=stream"
+      FORMATOPTION "FORM=SIMPLE"
+      FORMATOPTION "USE_FEATUREID=true"
+      FORMATOPTION "DSCO:GML_ID=fid"
+      FORMATOPTION "DSCO:PREFIX=example"
+      FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org"
+    END
+  
+    # outputformat used by WMS GetFeatureInfo request, not the WFS GetFeature requests
+    OUTPUTFORMAT
+      NAME "OGRGML3"
+      DRIVER "OGR/GML"
+      MIMETYPE "text/xml; subtype=gml/3.1.1"
+      FORMATOPTION "STORAGE=stream"
+      FORMATOPTION "FORM=SIMPLE"
+      FORMATOPTION "USE_FEATUREID=true"
+      FORMATOPTION "DSCO:FORMAT=GML3Deegree"
+      FORMATOPTION "DSCO:GML_FEATURE_COLLECTION=YES"
+      FORMATOPTION "DSCO:PREFIX=example"
+      FORMATOPTION "DSCO:XSISCHEMA=EXTERNAL"
+      FORMATOPTION "DSCO:TARGET_NAMESPACE=http://example.unknown.org"
+      FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"
+    END
+  
+    # outputformat used by WMS GetFeatureInfo requests, not the WFS GetFeature requests
+    OUTPUTFORMAT
+      NAME "OGRGML32"
+      DRIVER "OGR/GML"
+      MIMETYPE "text/xml; subtype=gml/3.2.1"
+      FORMATOPTION "STORAGE=stream"
+      FORMATOPTION "FORM=SIMPLE"
+      FORMATOPTION "USE_FEATUREID=true"
+      FORMATOPTION "DSCO:FORMAT=GML3.2"
+      FORMATOPTION "DSCO:GML_ID=wms.example.getfeatureinfo.collection"
+      FORMATOPTION "DSCO:GML_FEATURE_COLLECTION=YES"
+      FORMATOPTION "DSCO:PREFIX=example"
+      FORMATOPTION "DSCO:XSISCHEMA=EXTERNAL"
+      FORMATOPTION "DSCO:TARGET_NAMESPACE=http://example.unknown.org"
+      FORMATOPTION "DSCO:XSISCHEMAURI=http://example.unknown.org http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"
+    END  
+     
+    # outputformat used by WMS GetMap requests
+    OUTPUTFORMAT
+      NAME "SVG"
+      DRIVER CAIRO/SVG
+      MIMETYPE "image/svg+xml"
+      IMAGEMODE RGB
+      EXTENSION "svg"
+    END
+  
+    # outputformat used by tiled requests
+    OUTPUTFORMAT
+      NAME "mvt"
+      DRIVER MVT
+      FORMATOPTION "EDGE_BUFFER=20"
+      EXTENSION "pbf"
+      FORMATOPTION "EXTENT=4096"
+    END  
+  
+    WEB
+      METADATA
+        "ows_title"                      "Example"
+        "ows_abstract"                   "Service containing a example"
+        "ows_keywordlist"                "example,unknown"
+        "ows_schemas_location"           "http://schemas.opengis.net"
+  
+        "wfs_extent"                     "-9.976430 30.008374 15.984777 69.973999"
+        "wfs_namespace_prefix"           "example"
+        "wfs_namespace_uri"              "http://example.unknown.org"      
+        "wfs_maxfeatures"                "1000"
+        "wfs_onlineresource"             "http://localhost"
+  
+        "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml"
+        "wms_enable_request"             "* !GetStyles !DescribeLayer"
+        "wms_bbox_extended"              "true"
+        "wms_namespace_prefix"           "example"
+        "wms_namespace_uri"              "http://example.unknown.org"
+        "wms_getfeatureinfo_formatlist"  "text/html,text/xml; subtype=gml/3.2.1,text/xml; subtype=gml/3.1.1,application/json,application/json; subtype=geojson"
+  
+        "ows_sld_enabled"                "false"
+      END
+    END
+  
+    LAYER
+      NAME "etrs89"
+      STATUS ON
+      TYPE POINT
+      ## layer debug settings for mapserver, remove comment in lines below to enable
+      # DEBUG 4
+  
+      METADATA
+        "wfs_title"                    "etrs89"
+        "wfs_abstract"                 "Layer containing the etrs89 data"
+        "wfs_srs"                      "EPSG:4258 EPSG:28992"
+        "wfs_extent"                   "-9.976430 30.008374 15.984777 69.973999"
+        "wfs_bbox_extended"            "true"
+        "wfs_enable_request"           "*"
+        "wfs_include_items"            "all"
+        "wfs_getfeature_formatlist"    "OGRGML3,OGRGML32,GEOJSON,JSON"
+  
+        "gml_include_items"            "all"
+        "gml_exclude_items"            "id"
+        "gml_featureid"                "id"
+        "gml_geometries"               "geom"
+        "gml_types"                    "auto"
+  
+        "wms_title"                    "etrs89"
+        "wms_extent"                   "-9.976430 30.008374 15.984777 69.973999"
+        "wms_abstract"                 "Layer containing the etrs89 data"
+        "wms_srs"                      "EPSG:4258 EPSG:28992"
+        "wms_keywordlist"              "etrs89,unknown"
+        "wms_include_items"            "all"
+      END
+  
+      CLASSGROUP "etrs89:style"
+      CLASS
+        STYLE
+            SYMBOL "circle"
+            SIZE 16
+            COLOR 255 0 0
+            OUTLINECOLOR 0 0 0
+          END #STYLE
+      END # CLASS
+  
+      PROJECTION
+        "init=epsg:4258"
+      END
+  
+      CONNECTIONTYPE OGR
+      CONNECTION "/srv/data/Z001_ETRS89.gpkg"
+      DATA "Z001_ETRS89"
+
+    END # LAYER
+  END # MAP

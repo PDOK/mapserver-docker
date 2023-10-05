@@ -109,6 +109,7 @@ contain a mapserver `*.map` file that matches the `MS_MAPFILE` env var.
 ```shell
 docker run \
    --rm -d \
+   -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf \
    -e MS_MAPFILE=/srv/data/example.map \
    -p 80:80 \
    --name mapserver-example \
@@ -150,6 +151,7 @@ docker run \
    -e MAX_PROCS=3 \
    -e MAX_LOAD_PER_PROC=4 \
    -e IDLE_TIMEOUT=20 \
+   -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf \
    -e MS_MAPFILE=/srv/data/example.map \
    pdok/mapserver
 ```
