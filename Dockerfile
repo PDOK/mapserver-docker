@@ -42,7 +42,7 @@ RUN cd /tmp && \
         make install && \
         ldconfig
 
-ENV PROJ_VERSION="9.2.0"
+ENV PROJ_VERSION="9.3.0"
 
 RUN wget https://github.com/OSGeo/PROJ/releases/download/${PROJ_VERSION}/proj-${PROJ_VERSION}.tar.gz
 
@@ -61,6 +61,7 @@ RUN tar xzvf proj-${PROJ_VERSION}.tar.gz && \
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
+        libcurl4-gnutls-dev \
         libfribidi-dev \
         libgif-dev \
         libjpeg-dev \
@@ -71,6 +72,7 @@ RUN apt-get -y update && \
         libjpeg-dev \
         libexempi-dev \
         libfcgi-dev \
+        libgdal-dev \
         libgeos-dev \
         librsvg2-dev \
         libprotobuf-dev \
@@ -133,12 +135,10 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_POINT_Z_M=ON \
         -DWITH_GENERIC_NINT=OFF \
         -DWITH_PROTOBUFC=ON \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH=/build:/build/proj:/usr/local:/opt \
-        -DPROJ_INCLUDE_DIR=/usr/local/include -DPROJ_LIBRARY=/usr/local/lib/libproj.so \ 
-        -DGDAL_INCLUDE_DIR=/usr/local/include -DGDAL_LIBRARY=/usr/local/lib/libgdal.so \ 
-        ../ > ../configure.out.txt && \
-        make -j$(nproc) && make install && ldconfig
+        -DCMAKE_PREFIX_PATH=/opt/gdal && \
+    make && \
+    make install && \
+    ldconfig
 
 #local image lighttpd build from https://github.com/PDOK/lighttpd-docker/tree/PDOK-14748_mapserver_8
 FROM pdok/lighttpd:mapserver AS service
@@ -175,7 +175,6 @@ RUN apt-get -y update && \
         librsvg2-2 \
         libprotobuf32 \
         libprotobuf-c1 \
-        libspatialite7 \
         gettext-base \
         libsqlite3-mod-spatialite \
         gdal-bin \
