@@ -141,7 +141,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     ldconfig
 
 #local image lighttpd build from https://github.com/PDOK/lighttpd-docker/tree/PDOK-14748_mapserver_8
-FROM lighttpd:1 AS service
+FROM pdok/lighttpd:mapserver AS service
 
 USER root
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
