@@ -7,8 +7,8 @@ MAP
     SIZE          4000 4000
     
     ## global debug settings for mapserver, remove comment in lines below to enable
-    # DEBUG         4         # https://mapserver.org/optimization/debugging.html
-    # CONFIG "CPL_DEBUG" "ON" # GDAL
+    DEBUG         5         # https://mapserver.org/optimization/debugging.html
+    CONFIG "CPL_DEBUG" "ON" # GDAL
   
     RESOLUTION 91
     DEFRESOLUTION 91
@@ -23,7 +23,7 @@ MAP
         "ows_fees"                         "NONE"
         "ows_contactorganization"          "Unknown"
         "ows_schemas_location"             "http://schemas.opengis.net"
-        "ows_service_onlineresource"       "http://localhost"
+        "ows_service_onlineresource"       "http://localhost/mapserver"
         "ows_contactperson"                "ContactCenter Unknown"
         "ows_contactposition"              "pointOfContact"
         "ows_contactvoicetelephone"        ""
@@ -38,7 +38,7 @@ MAP
         "ows_hoursofservice"               ""
         "ows_contactinstructions"          ""
         "ows_role"                         ""
-        "ows_srs"                          "EPSG:4258 EPSG:28992"
+        "ows_srs"                          "EPSG:4258 EPSG:28992 EPSG:7931 EPSG:7415"
         "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0"      
       END
     END
@@ -142,7 +142,7 @@ MAP
         "wfs_namespace_prefix"           "example"
         "wfs_namespace_uri"              "http://example.unknown.org"      
         "wfs_maxfeatures"                "1000"
-        "wfs_onlineresource"             "http://localhost"
+        "wfs_onlineresource"             "http://localhost/mapserver"
   
         "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml"
         "wms_enable_request"             "* !GetStyles !DescribeLayer"
@@ -181,7 +181,7 @@ MAP
         "wms_title"                    "etrs89"
         "wms_extent"                   "-9.976430 30.008374 15.984777 69.973999"
         "wms_abstract"                 "Layer containing the etrs89 data"
-        "wms_srs"                      "EPSG:4258 EPSG:28992"
+        "wms_srs"                      "EPSG:4258 EPSG:28992 EPSG:7931 EPSG:7415"
         "wms_keywordlist"              "etrs89,unknown"
         "wms_include_items"            "all"
       END
@@ -201,8 +201,8 @@ MAP
       END
   
       CONNECTIONTYPE OGR
-      CONNECTION "/srv/data/Z001_ETRS89.gpkg"
-      DATA "Z001_ETRS89"
+      CONNECTION "/srv/data/Z001_ETRS89andRDNAP_ETRS89.vrt"
+      DATA "Z001_ETRS89andRDNAP"
 
     END # LAYER
   END # MAP
