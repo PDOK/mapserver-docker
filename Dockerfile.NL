@@ -8,7 +8,7 @@ RUN mkdir proj-data-1.15 && \
     cp /proj-data-1.15/*.* /usr/local/share/proj/ && \
     rm -rf proj-datumgrid*
 
-COPY --from=nsgi/proj:9.3.0 /usr/share/proj/proj.db /usr/local/share/proj/proj.db
+COPY --from=osgeo/proj:9.3.0 /usr/share/proj/proj.db /usr/local/share/proj/proj.db
 
 COPY ./null /usr/local/share/proj/null
 
