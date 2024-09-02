@@ -13,7 +13,7 @@ docker run --rm -p 80:80 --name rdnap -v `pwd`/ETRS89andRDNAP:/srv/data -e DEBUG
 ## 8.0.0-lighttpd
 
 ```docker
-docker build -f Dockerfile.NL -t pdok/mapserver:8.0.0-lighttpd-nl .
+docker build --target NL -t pdok/mapserver:8.0.0-lighttpd-nl .
 ```
 
 ```docker

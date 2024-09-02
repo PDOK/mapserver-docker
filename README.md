@@ -97,7 +97,7 @@ For a specific Dutch version which includes a specific (and smaller) epsg file
 and necessary grid corrections files.
 
 ```shell
-docker build -t pdok/mapserver:nl -f Dockerfile.NL .
+docker build -t pdok/mapserver:nl --target=NL .
 ```
 
 ### Run
@@ -164,8 +164,8 @@ of ways through this setup.
 
 ### base image
 
-The best example for this is the [Dockerfile.NL](/Dockerfile.NL) in this
-repository. This Dockerfile uses the main Dockerfile as a base image copies
+The best example for this is the [Dockerfile NL target](./Dockerfile) in this
+repository. This uses the main layer ("service") as a base, copies
 specific geodetic grid files and overwrites the default espg with a tuned one
 for the Netherlands.
 
