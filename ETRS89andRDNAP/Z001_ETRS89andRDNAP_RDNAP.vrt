@@ -1,9 +1,9 @@
 <OGRVRTDataSource>
     <OGRVRTLayer name="Z001_ETRS89andRDNAP">
-        <SrcDataSource>CSV:Z001_ETRS89andRDNAP.txt</SrcDataSource>
+        <SrcDataSource>CSV:/srv/data/Z001_ETRS89andRDNAP.txt</SrcDataSource>
         <LayerSRS>EPSG:28992</LayerSRS>
-        <FID>field_1</FID>
+        <FID>fid</FID>
         <GeometryType>wkbPoint</GeometryType>
-        <GeometryField encoding="PointFromColumns" x="field_5" y="field_6"/>
+        <GeometryField encoding="PointFromColumns" x="rd_x" y="rd_y"/>
     </OGRVRTLayer>
 </OGRVRTDataSource>
