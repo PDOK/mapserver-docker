@@ -42,7 +42,7 @@ RUN cd /tmp && \
         make install && \
         ldconfig
 
-ENV PROJ_VERSION="9.3.0"
+ENV PROJ_VERSION="9.3.1"
 
 RUN wget https://github.com/OSGeo/PROJ/releases/download/${PROJ_VERSION}/proj-${PROJ_VERSION}.tar.gz
 
@@ -58,9 +58,8 @@ RUN tar xzvf proj-${PROJ_VERSION}.tar.gz && \
     cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && make -j$(nproc) && make install
 
-
-RUN apt-get -y update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get -y update --fix-missing && \
+    apt-get install -y --no-install-recommends --fix-missing \
         libcurl4-gnutls-dev \
         libfribidi-dev \
         libgif-dev \
@@ -72,7 +71,6 @@ RUN apt-get -y update && \
         libjpeg-dev \
         libexempi-dev \
         libfcgi-dev \
-        libgdal-dev \
         libgeos-dev \
         librsvg2-dev \
         libprotobuf-dev \
@@ -82,11 +80,24 @@ RUN apt-get -y update && \
         libxslt1-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get -y update --fix-missing
+ENV GDAL_VERSION="3.9.2"
+
+RUN wget https://github.com/OSGeo/gdal/releases/download/v${GDAL_VERSION}/gdal-${GDAL_VERSION}.tar.gz
+RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
+    cd /gdal-${GDAL_VERSION} && \
+    mkdir build && \
+    cd build && \
+    cmake .. \
+        -DCMAKE_INSTALL_PREFIX=/usr/local \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_TESTING=OFF \
+        && \
+    cmake --build . && \
+    cmake --build . --target install
 
 RUN mkdir /usr/local/src/mapserver
-RUN wget https://github.com/MapServer/MapServer/releases/download/rel-8-0-1/mapserver-8.0.1.tar.gz
-RUN tar -xf mapserver-8.0.1.tar.gz --strip-components 1  -C /usr/local/src/mapserver
+RUN wget https://github.com/MapServer/MapServer/releases/download/rel-8-2-2/mapserver-8.2.2.tar.gz
+RUN tar -xf mapserver-8.*.tar.gz --strip-components 1  -C /usr/local/src/mapserver
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
@@ -135,7 +146,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_POINT_Z_M=ON \
         -DWITH_GENERIC_NINT=OFF \
         -DWITH_PROTOBUFC=ON \
-        -DCMAKE_PREFIX_PATH=/opt/gdal && \
+        && \
     make && \
     make install && \
     ldconfig
@@ -163,7 +174,6 @@ RUN apt-get -y update && \
         libjpeg62-turbo \
         libfcgi0ldbl \
         libfribidi0 \
-        libgdal32 \
         libgeos-c1v5 \
         libglib2.0-0 \
         libxml2 \
@@ -177,7 +187,6 @@ RUN apt-get -y update && \
         libprotobuf-c1 \
         gettext-base \
         libsqlite3-mod-spatialite \
-        gdal-bin \
         wget \
         sqlite3 \
         gnupg && \
