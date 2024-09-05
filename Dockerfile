@@ -210,15 +210,17 @@ EXPOSE 80
 
 CMD ["lighttpd", "-D", "-f", "/srv/mapserver/config/lighttpd.conf"]
 
-FROM ghcr.io/geodetischeinfrastructuur/transformations:1.2.0 as nsgi-transformations
+FROM ghcr.io/geodetischeinfrastructuur/transformations:1.2.1 as nsgi-transformations
 FROM service AS NL
 
 USER root
 
 # from https://github.com/GeodetischeInfrastructuur/transformations/blob/main/Dockerfile
 # not copying proj.db but applying the same additions
-COPY --from=nsgi-transformations /usr/share/proj/bq_nsgi_bongeo2004.tif /usr/share/proj/
-COPY --from=nsgi-transformations /usr/share/proj/nllat2018.gtx /usr/share/proj/
+COPY --from=nsgi-transformations \
+    /usr/share/proj/bq_nsgi_bongeo2004.tif \
+    /usr/share/proj/nllat2018.gtx \
+    /usr/share/proj/
 COPY --from=nsgi-transformations /usr/share/proj/nl_nsgi_sql /usr/share/proj/nl_nsgi_sql
 RUN cat /usr/share/proj/nl_nsgi_sql/nl_nsgi_00_authorities.sql | sqlite3 /usr/share/proj/proj.db
 RUN cat /usr/share/proj/nl_nsgi_sql/nl_nsgi_10_copy_transformations_from_projdb.sql | sqlite3 /usr/share/proj/proj.db
