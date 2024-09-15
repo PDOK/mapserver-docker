@@ -175,6 +175,12 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/*
 RUN apt-get clean
 
+# Mirror the PROJ.org Datumgrid CDN.
+WORKDIR /usr/local/share/proj
+RUN wget --no-verbose -e robots=off --content-on-error --mirror https://cdn.proj.org/ || [ $? -eq 8 ]
+RUN cd cdn.proj.org && rm -fv *.js *.css *.html favicon* && mv * .. && cd .. && rmdir cdn.proj.org
+WORKDIR /
+
 COPY --from=builder  /usr/local/share/proj/ /usr/local/share/proj/
 COPY --from=builder /usr/include/ /usr/include/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
