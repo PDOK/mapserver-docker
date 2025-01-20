@@ -6,7 +6,7 @@ jobs:
   test-regression:
     runs-on: ubuntu-latest
     steps:
-      - uses: action/checkout@v4
+      - uses: actions/checkout@v4
 
       # build local test image
       - name: Set up Docker Buildx
