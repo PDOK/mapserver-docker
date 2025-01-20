@@ -17,7 +17,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: false
-          tags: mapserver:local
+          tags: pdok/mapserver:local
 
       - name: Regression test => rectObj wrong projection
         run: |
