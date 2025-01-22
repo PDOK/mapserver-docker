@@ -1,8 +1,8 @@
-FROM debian:bookworm as builder
+FROM debian:bookworm AS builder
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV TZ Europe/Amsterdam
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Amsterdam
 
 RUN apt-get update -y --fix-missing && \
     apt-get install -y --no-install-recommends --fix-missing \
@@ -47,7 +47,7 @@ RUN apt-get update -y --fix-missing && \
 
 RUN update-locale LANG=C.UTF-8
 
-ENV HARFBUZZ_VERSION 7.3.0
+ENV HARFBUZZ_VERSION="7.3.0"
 RUN cd /tmp && \
         wget https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION/harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
         tar xJf harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
@@ -142,8 +142,8 @@ FROM pdok/lighttpd:1.4.67-bookworm-rc1 AS service
 USER root
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV TZ Europe/Amsterdam
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Amsterdam
 
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
@@ -193,17 +193,17 @@ ADD config/request.lua /srv/mapserver/config/request.lua
 
 USER www
 
-ENV DEBUG 0
-ENV MIN_PROCS 4
-ENV MAX_PROCS 8
-ENV MAX_LOAD_PER_PROC 1
-ENV IDLE_TIMEOUT 20
+ENV DEBUG=0
+ENV MIN_PROCS=4
+ENV MAX_PROCS=8
+ENV MAX_LOAD_PER_PROC=1
+ENV IDLE_TIMEOUT=20
 
 EXPOSE 80
 
 CMD ["lighttpd", "-D", "-f", "/srv/mapserver/config/lighttpd.conf"]
 
-FROM ghcr.io/geodetischeinfrastructuur/transformations:1.2.1 as nsgi-transformations
+FROM ghcr.io/geodetischeinfrastructuur/transformations:1.2.1 AS nsgi-transformations
 FROM service AS NL
 
 USER root
