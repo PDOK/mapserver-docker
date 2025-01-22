@@ -18,6 +18,12 @@ jobs:
         with:
           push: false
           tags: pdok/mapserver:local
+      - name: Build test image (NL target)
+        uses: docker/build-push-action@v5
+        with:
+          push: false
+          target: NL
+          tags: pdok/mapserver:local-nl
 
       - name: Regression test => rectObj wrong projection (WMS)
         run: |
@@ -79,5 +85,69 @@ jobs:
 
           # stop mapserver
           docker stop mapserver-rectobj-wfs
+
+          exit $exit_code
+
+      - name: Regression test => RDNAPTRANS (RD->ETRS89)
+        run: |
+          # start mapserver
+          docker run --rm -d -p 8181:80 --name mapserver-rdnap-wfs -v `pwd`/testdata/ETRS89andRDNAP:/srv/data -e MAPSERVER_CONFIG_FILE=/srv/data/rd.conf -e SERVICE_TYPE=wfs -e MS_MAPFILE=/srv/data/rd.map pdok/mapserver:local
+
+          # execute request
+          mkdir -p `pwd`/testdata/ETRS89andRDNAP/actual
+          curl "http://localhost:8181/mapserver?service=WFS&version=2.0.0&request=GetFeature&typeName=rd&outputFormat=geojson&srsName=EPSG:4258" -sL | \
+          jq --arg crs "etrs89" '.features | .[] | { id, x_dev: (.geometry.coordinates[0] - (.properties[$crs+"_x"]|tonumber)), y_dev: (.geometry.coordinates[1] - (.properties[$crs+"_y"]|tonumber)) } | {error: ((.x_dev|fabs) > 0.001 or (.y_dev|fabs) > 0.001 )} + .' | \
+          jq -s 'group_by (.error)[] | {error: .[0].error, count: length}' > `pwd`/testdata/ETRS89andRDNAP/actual/etrs89.json
+
+          # assert results are as expected
+          exit_code=0
+          results=($(cat `pwd`/testdata/ETRS89andRDNAP/actual/etrs89.json | jq -r '.error'))
+          for err in "${results[@]}"
+          do
+            if [ "$err" == "true" ]
+            then
+              echo "found errors in RDNAPTRANS from RD to ETRS89:"
+              cat `pwd`/testdata/ETRS89andRDNAP/actual/etrs89.json
+              exit_code=1
+            fi
+          done
+
+          # cleanup
+          rm -rf `pwd`/testdata/ETRS89andRDNAP/actual
+
+          # stop mapserver
+          docker stop mapserver-rdnap-wfs
+
+          exit $exit_code
+
+      - name: Regression test => RDNAPTRANS (ETRS89->RD)
+        run: |
+          # start mapserver
+          docker run --rm -d -p 8181:80 --name mapserver-rdnap-wfs -v `pwd`/testdata/ETRS89andRDNAP:/srv/data -e MAPSERVER_CONFIG_FILE=/srv/data/etrs89.conf -e SERVICE_TYPE=wfs -e MS_MAPFILE=/srv/data/etrs89.map pdok/mapserver:local-nl
+
+          # execute request
+          mkdir -p `pwd`/testdata/ETRS89andRDNAP/actual
+          curl "http://localhost:8181/mapserver?service=WFS&version=2.0.0&request=GetFeature&typeName=etrs89&outputFormat=geojson&srsName=EPSG:28992" -sL | \
+          jq --arg crs "rd" '.features | .[] | { id, x_dev: (.geometry.coordinates[0] - (.properties[$crs+"_x"]|tonumber)), y_dev: (.geometry.coordinates[1] - (.properties[$crs+"_y"]|tonumber)) } | {error: ((.x_dev|fabs) > 0.001 or (.y_dev|fabs) > 0.001 )} + .' | \
+          jq -s 'group_by (.error)[] | {error: .[0].error, count: length}' > `pwd`/testdata/ETRS89andRDNAP/actual/rd.json
+
+          # assert results are as expected
+          exit_code=0
+          results=($(cat `pwd`/testdata/ETRS89andRDNAP/actual/rd.json | jq -r '.error'))
+          for err in "${results[@]}"
+          do
+            if [ "$err" == "true" ]
+            then
+              echo "found errors in RDNAPTRANS from ETRS89 to RD:"
+              cat `pwd`/testdata/ETRS89andRDNAP/actual/rd.json
+              exit_code=1
+            fi
+          done
+
+          # cleanup
+          rm -rf `pwd`/testdata/ETRS89andRDNAP/actual
+
+          # stop mapserver
+          docker stop mapserver-rdnap-wfs
 
           exit $exit_code
