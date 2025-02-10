@@ -194,7 +194,7 @@ ADD config/request.lua /srv/mapserver/config/request.lua
 USER www
 
 ENV DEBUG=0
-ENV MIN_PROCS=4
+ENV MIN_PROCS=8
 ENV MAX_PROCS=8
 ENV MAX_LOAD_PER_PROC=1
 ENV IDLE_TIMEOUT=20
