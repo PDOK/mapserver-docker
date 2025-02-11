@@ -44,7 +44,7 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Build and push NL
-        id: docker_build
+        id: docker_build_nl
         uses: docker/build-push-action@v3
         with:
           push: true
