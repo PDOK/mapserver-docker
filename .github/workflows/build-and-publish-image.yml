@@ -39,7 +39,7 @@ jobs:
         with:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
-          file: ${{context}}/Dockerfile
+          file: ./Dockerfile
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
@@ -49,7 +49,7 @@ jobs:
         with:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}-nl
-          file: ${{context}}/Dockerfile
+          file: ./Dockerfile
           target: NL
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
