@@ -151,3 +151,27 @@ jobs:
           docker stop mapserver-rdnap-wfs
 
           exit $exit_code
+      - name: Regression test => Different CRS (RDNAPTRANS -> EPSG:4258)
+        run: |
+          # start mapserver
+          docker run --rm -d -p 8181:80 --name mapserver-crs -v `pwd`/testdata/crs:/srv/data -e MAPSERVER_CONFIG_FILE=/srv/data/natpark.conf -e SERVICE_TYPE=wfs -e MS_MAPFILE=/srv/data/natpark.map pdok/mapserver:local-nl
+
+          # execute request
+          mkdir -p `pwd`/testdata/crs/actual
+          curl "http://localhost:8181/mapserver?service=WFS&request=GetFeature&count=1&version=2.0.0&outputFormat=application/json&typeName=nationaleparken&srsName=EPSG:4258" -sL > `pwd`/testdata/crs/actual/output.json
+
+          # assert results are as expected
+          exit_code=0
+          [ $(cat `pwd`/testdata/crs/actual/output.json | jq -r '.crs.properties.name') == "urn:ogc:def:crs:EPSG::4258" ] || exit_code=1;
+          [ $(cat `pwd`/testdata/crs/actual/output.json | jq -r '.bbox[0]' | xargs -I '{}' echo "scale=5;" "({}-4.3646379084)/1 == 0" | bc) ] || exit_code=1;
+          [ $(cat `pwd`/testdata/crs/actual/output.json | jq -r '.bbox[1]' | xargs -I '{}' echo "scale=5;" "({}-51.3620482342678)/1 == 0" | bc) ] || exit_code=1;
+          [ $(cat `pwd`/testdata/crs/actual/output.json | jq -r '.bbox[2]' | xargs -I '{}' echo "scale=5;" "({}-4.46528581228022)/1 == 0" | bc) ] || exit_code=1;
+          [ $(cat `pwd`/testdata/crs/actual/output.json | jq -r '.bbox[3]' | xargs -I '{}' echo "scale=5;" "({}-51.4268875774673)/1 == 0" | bc) ] || exit_code=1;
+          
+          # cleanup
+          rm -rf `pwd`/testdata/crs/actual
+
+          # stop mapserver
+          docker stop mapserver-crs
+
+          exit $exit_code
