@@ -3,8 +3,6 @@
 This is to test if RDNAPTRANS transformations are used properly.
 The test source data originates from NSGI.
 
-TODO automate this test in the build
-
 ## Run mapserver
 
 ### existing 7.6.4-patch5-2-buster-lighttpd
