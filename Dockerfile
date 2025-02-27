@@ -135,9 +135,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-# pre-release image lighttpd build from https://github.com/PDOK/lighttpd-docker/tree/PDOK-14748_mapserver_8
-# TODO use definitive lighttpd image
-FROM pdok/lighttpd:1.4.67-bookworm-rc1 AS service
+FROM pdok/lighttpd:1.5.0 AS service
 
 USER root
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
