@@ -118,7 +118,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4.67 AS service
+FROM pdok/lighttpd:1.5.0 AS service
 
 USER root
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
