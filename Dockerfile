@@ -143,7 +143,7 @@ LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Amsterdam
 
-RUN apt-get -y update && \
+RUN apt-get -y update --fix-missing && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         libpng16-16 \
@@ -169,6 +169,7 @@ RUN apt-get -y update && \
         wget \
         sqlite3 \
         gnupg \
+        libpcre2-posix3 \
         && \
     rm -rf /var/lib/apt/lists/*
 RUN apt-get clean
