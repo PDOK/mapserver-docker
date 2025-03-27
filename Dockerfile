@@ -167,6 +167,7 @@ RUN apt-get -y update --fix-missing && \
         libprotobuf32 \
         libprotobuf-c1 \
         gettext-base \
+        libspatialite7 \
         libsqlite3-mod-spatialite \
         wget \
         sqlite3 \
