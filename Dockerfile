@@ -31,6 +31,7 @@ RUN apt-get update -y --fix-missing && \
         libprotobuf32 \
         librsvg2-dev \
         libsqlite3-dev \
+        libspatialite-dev \
         libtiff5-dev \
         libxslt1-dev \
         git \
@@ -75,6 +76,7 @@ RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=OFF \
+        -DGDAL_USE_SPATIALITE=ON\
         && \
     cmake --build . && \
     cmake --build . --target install
