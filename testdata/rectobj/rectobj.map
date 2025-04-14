@@ -1,0 +1,77 @@
+MAP
+  NAME          ""
+  CONFIG        "MS_ERRORFILE" "stderr"
+  EXTENT        5000 250000 280000 860000
+  UNITS         meters
+  STATUS        ON
+  DEBUG         5
+  CONFIG        "CPL_DEBUG" "ON"
+  PROJECTION
+    "init=epsg:28992"
+  END
+
+  WEB
+    METADATA
+      "ows_enable_request"               "*"
+      "ows_schemas_location"             "http://schemas.opengis.net"
+      "ows_srs"                          "EPSG:28992 EPSG:25831 EPSG:25832 EPSG:3034 EPSG:3035 EPSG:3857 EPSG:4258 EPSG:4326"
+      "wms_allow_getmap_without_styles"  "true"
+    END
+  END
+
+  WEB
+    METADATA
+      "ows_title"                      "bag"
+      "ows_abstract"                   "abstract"
+      "wfs_onlineresource"             "http://localhost"
+      "wfs_getfeature_formatlist"      "GEOJSON,JSON,XML,GML3"
+      "wfs_maxfeatures"                "1000"
+      "wms_feature_info_mime_type"     "application/vnd.ogc.gml,text/html,text/plain,application/json,application/json; subtype=geojson,text/xml,text/xml; subtype=gml/3.1.1"
+      "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8"
+      "wms_onlineresource"             "http://localhost"
+    END # METADATA
+  END
+  LAYER
+    STATUS ON
+    DEBUG 5
+    NAME "pand"
+
+    CONNECTIONTYPE OGR
+    CONNECTION "/srv/data/rectobj.geojson"
+    DATA "pand"
+
+    TYPE POLYGON
+    PROJECTION
+        "init=epsg:28992"
+    END
+
+    METADATA
+      "wfs_title"                             "pand"
+      "wfs_abstract"                          "pand"
+      "wfs_srs"                               "EPSG:28992 EPSG:25831 EPSG:25832 EPSG:3034 EPSG:3035 EPSG:3857 EPSG:4258 EPSG:4326"
+      "wfs_include_items"                     "all"
+      "wfs_bbox_extended"                     "false"
+      "wfs_enable_request"                    "*"
+      "wfs_geomtype"                          "Polygon"
+      "wfs_use_default_extent_for_getfeature" "false"
+      "gml_geometries"                        "geom"
+      "gml_types"                             "auto"
+
+      "ows_title"                             "pand"
+      "wms_abstract"                          "pand"
+
+    END # METADATA
+
+    CLASS
+      NAME "pand"
+      STYLE
+        COLOR 204 204 204
+      END
+      STYLE
+        OUTLINECOLOR 0 126 169
+        WIDTH 7
+      END
+    END
+
+  END # LAYER
+END # MAP

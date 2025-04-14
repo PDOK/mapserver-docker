@@ -1,0 +1,146 @@
+MAP
+NAME          "" # empty so ETF geonovum test doesn't try to test it
+CONFIG        "MS_ERRORFILE" "stderr"
+EXTENT        -25000 250000 280000 860000
+UNITS         meters
+STATUS        ON
+SIZE 1 1 # filler value, to prevent mapserver complaining in logs no width or height are set
+#DEBUG         5
+PROJECTION
+"init=epsg:28992"
+END
+
+WEB
+METADATA
+"ows_enable_request"               "*"
+"ows_fees"                         "NONE"
+"ows_contactorganization"          "PDOK"
+"ows_schemas_location"             "http://schemas.opengis.net"
+"ows_service_onlineresource"       "https://service.pdok.nl/"
+"ows_contactperson"                "KlantContactCenter PDOK"
+"ows_contactposition"              "pointOfContact"
+"ows_contactvoicetelephone"        ""
+"ows_contactfacsimiletelephone"    ""
+"ows_addresstype"                  "Work"
+"ows_address"                      ""
+"ows_city"                         "Apeldoorn"
+"ows_stateorprovince"              ""
+"ows_postcode"                     ""
+"ows_country"                      "Nederland"
+"ows_contactelectronicmailaddress" "BeheerPDOK@kadaster.nl"
+"ows_hoursofservice"               ""
+"ows_contactinstructions"          "https://www.pdok.nl/contact"
+"ows_role"                         ""
+"ows_srs"                          "EPSG:28992 EPSG:25831 EPSG:25832 EPSG:3034 EPSG:3035 EPSG:3857 EPSG:4258 EPSG:4326"
+"ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0/deed.nl;Geen beperkingen"
+END
+END
+
+OUTPUTFORMAT
+NAME "GEOJSON"       # format name (visible as format in the 1.0.0 capabilities)
+DRIVER "OGR/GEOJSON"
+MIMETYPE "application/json; subtype=geojson"
+FORMATOPTION "STORAGE=stream"
+FORMATOPTION "FORM=SIMPLE"
+FORMATOPTION "USE_FEATUREID=true"
+FORMATOPTION "LCO:ID_FIELD=fuuid"
+FORMATOPTION "LCO:ID_TYPE=STRING"
+FORMATOPTION "LCO:WRITE_BBOX=YES"
+END
+
+OUTPUTFORMAT
+NAME "JSON"
+DRIVER "OGR/GEOJSON"
+MIMETYPE "application/json"
+FORMATOPTION "STORAGE=stream"
+FORMATOPTION "FORM=SIMPLE"
+FORMATOPTION "USE_FEATUREID=true"
+FORMATOPTION "LCO:ID_FIELD=fuuid"
+FORMATOPTION "LCO:ID_TYPE=STRING"
+FORMATOPTION "LCO:WRITE_BBOX=YES"
+END
+
+OUTPUTFORMAT
+NAME "XML"
+DRIVER "OGR/GML"
+MIMETYPE "text/xml"
+FORMATOPTION "STORAGE=stream"
+FORMATOPTION "FORM=SIMPLE"
+FORMATOPTION "USE_FEATUREID=true"
+END
+
+OUTPUTFORMAT
+NAME "GML3"
+DRIVER "OGR/GML"
+MIMETYPE "text/xml; subtype=gml/3.1.1"
+FORMATOPTION "STORAGE=stream"
+FORMATOPTION "FORM=SIMPLE"
+FORMATOPTION "USE_FEATUREID=true"
+END
+
+WEB
+METADATA
+"ows_title"                      "Nationale parken WFS"
+"ows_abstract"                   "Dit bestand geeft de grenzen van de Nationale Parken weer, zoals die door de Secretarissen van de Parken zijn aangegeven in de periode augustus 2005 - november 2005, met een update in januari 2007 en in augustus 2007. Op de grenzen van NP Drents-Friese Wold volgt nog een correctie. Het bestand bevat in totaal 21 Nationale Parken: 18 door de Minister van LNV vastgestelde Parken (waarvan 1 in oprichting), 2 Particuliere Parken en 1 grensoverschrijdend Park, vastgesteld door het Commité van Ministers van de Benelux. Daarnaast komen in het GIS-bestand &quot;uitwerkingsgebieden&quot; voor. Dit zijn gebieden die bij voorkeur op termijn onderdeel moeten gaan uitmaken van een Nationaal Park, maar nu nog niet zijn aangewezen. Ze maken dan ook GEEN deel uit van het betreffende Park en hebben geen enkele status! De grenzen in het GIS-bestand kunnen afwijken van de grenzen in het BIP (Beheers- en Inrichtingsplan). Elk Nationaal Park heeft een BIP, dat ter goedkeuring wordt voorgelegd aan de Minister van LNV. Elk BIP bevat een kaart met de begrenzing van het Park. Die grens is een momentopname. In de loop der tijd kunnen de grenzen van een Park licht wijzigen door kleine aankopen of uitruil van gronden. Die wijzigingen worden bij periodieke updates doorgevoerd in het BIP. Een BIP kan daardoor achter- of juist vooruitlopen op de grenzen in dit bestand."
+"ows_keywordlist"                "Protected sites,Beschermde gebieden,HVD,Aardobservatie en milieu,infoFeatureAccessService"
+"wfs_languages"                  "eng" #first default, values according ISO 639-2/B
+"wfs_extent"                     "-25000 250000 280000 860000"
+"wfs_namespace_prefix"           "nationaleparken"
+"wfs_namespace_uri"              "http://nationaleparken.geonovum.nl"
+"wfs_onlineresource"             "https://service.pdok.nl/rvo/nationaleparken/wfs/v2_0"
+"wfs_getfeature_formatlist"      "GEOJSON,JSON,XML,GML3" # List of earlier defined outputformat names
+"wfs_maxfeatures"                "1000"
+"wfs_maxfeatures_ignore_for_resulttype_hits" "true"
+"wfs_storedqueries"              "urn:x-inspire:storedQuery:nationaleparken:FullDataset"
+"wfs_urn:x-inspire:storedQuery:nationaleparken:FullDataset_filedef" "/srv/data/config/storedquery_fulldataset.xml"
+"wfs_inspire_metadataurl_href"   "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=b87a0095-2ad7-4dbb-81a1-fed060df79e1"
+"wfs_inspire_metadataurl_format" "application/vnd.ogc.csw.GetRecordByIdResponse_xml"
+"wfs_inspire_capabilities"       "url"
+"wfs_inspire_dsid_code"          "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=#MD_DataIdentification"
+END
+END
+
+LAYER
+STATUS ON
+NAME "nationaleparken"
+CONNECTIONTYPE OGR
+CONNECTION "/srv/data/natpark.gpkg"
+DATA "natpark"
+TYPE POLYGON
+PROJECTION
+"init=epsg:28992"  # Define the source projection to enable reprojection
+END
+TEMPLATE void
+METADATA
+"wfs_title"                             "Nationale Parken"
+"wfs_abstract"                          "Nationaleparken Beschermde gebieden"
+"wfs_keywordlist"                       "Beschermde gebieden"
+"wfs_srs"                               "EPSG:28992 EPSG:25831 EPSG:25832 EPSG:3034 EPSG:3035 EPSG:3857 EPSG:4258 EPSG:4326"
+"wfs_extent"                            "-25000 250000 280000 860000" #DEFAULT !!! belangrijk, anders is performance slecht
+"wfs_include_items"                     "all" # required for getfeatureinfo
+"wfs_bbox_extended"                     "true"
+"wfs_enable_request"                    "*"
+"wfs_featureid"                         "puuid"
+"wfs_geomtype"                          "MultiPolygon"
+"wfs_use_default_extent_for_getfeature" "false"
+"gml_include_items"                     "fuuid,objectid,naam,instrument,nr,datum,bron,fiat_secr,hectares" # required for getfeatureinfo
+"gml_fuuid_alias"            "fuuid"
+"gml_objectid_alias"            "objectid"
+"gml_naam_alias"            "naam"
+"gml_instrument_alias"            "instrument"
+"gml_nr_alias"            "nr"
+"gml_datum_alias"            "datum"
+"gml_bron_alias"            "bron"
+"gml_fiat_secr_alias"            "fiatSecr"
+"gml_hectares_alias"            "hectares"
+"gml_featureid"                         "puuid"
+"gml_exclude_items"                     "puuid"
+"gml_geometries"                        "geom"
+"gml_types"                             "auto"
+"ows_metadataurl_type"                  "TC211"
+"ows_metadataurl_format"                "text/plain"
+"ows_metadataurl_href"                  "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=4961d305-fbb5-426a-9ba3-53e1ca5f3b18"
+END
+
+END # LAYER
+END # MAP
