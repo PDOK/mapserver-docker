@@ -39,18 +39,17 @@ jobs:
         with:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
-          file: ./Dockerfile
+          file: ${{context}}/Dockerfile
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Build and push NL
-        id: docker_build_nl
+        id: docker_build
         uses: docker/build-push-action@v3
         with:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}-nl
-          file: ./Dockerfile
-          target: NL
+          file: ${{context}}/Dockerfile.NL
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new

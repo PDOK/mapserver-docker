@@ -23,14 +23,14 @@ docker build -t pdok/mapserver .
 ### docker run wms
 
 ```shell
-docker run -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WMS --rm -d \
-            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
+docker run -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WMS  --rm -d \
+            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver 
 ```
 
 ### docker run wfs
 
 ```shell
-docker run -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WFS  --rm -d \
+docker run -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WFS  --rm -d \
             -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver 
 ```
 
@@ -97,7 +97,7 @@ For a specific Dutch version which includes a specific (and smaller) epsg file
 and necessary grid corrections files.
 
 ```shell
-docker build -t pdok/mapserver:nl --target=NL .
+docker build -t pdok/mapserver:nl -f Dockerfile.NL .
 ```
 
 ### Run
@@ -109,7 +109,6 @@ contain a mapserver `*.map` file that matches the `MS_MAPFILE` env var.
 ```shell
 docker run \
    --rm -d \
-   -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf \
    -e MS_MAPFILE=/srv/data/example.map \
    -p 80:80 \
    --name mapserver-example \
@@ -151,7 +150,6 @@ docker run \
    -e MAX_PROCS=3 \
    -e MAX_LOAD_PER_PROC=4 \
    -e IDLE_TIMEOUT=20 \
-   -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf \
    -e MS_MAPFILE=/srv/data/example.map \
    pdok/mapserver
 ```
@@ -164,8 +162,8 @@ of ways through this setup.
 
 ### base image
 
-The best example for this is the [Dockerfile NL target](./Dockerfile) in this
-repository. This uses the main layer ("service") as a base, copies
+The best example for this is the [Dockerfile.NL](/Dockerfile.NL) in this
+repository. This Dockerfile uses the main Dockerfile as a base image copies
 specific geodetic grid files and overwrites the default espg with a tuned one
 for the Netherlands.
 
