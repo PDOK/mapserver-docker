@@ -104,7 +104,7 @@ LAYER
 STATUS ON
 NAME "nationaleparken"
 CONNECTIONTYPE OGR
-CONNECTION "/srv/data/natpark.gpkg"
+CONNECTION "/srv/data/example.gpkg"
 DATA "natpark"
 TYPE POLYGON
 PROJECTION
