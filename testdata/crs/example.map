@@ -14,22 +14,22 @@ WEB
 METADATA
 "ows_enable_request"               "*"
 "ows_fees"                         "NONE"
-"ows_contactorganization"          "PDOK"
+"ows_contactorganization"          "ACME"
 "ows_schemas_location"             "http://schemas.opengis.net"
-"ows_service_onlineresource"       "https://service.pdok.nl/"
-"ows_contactperson"                "KlantContactCenter PDOK"
+"ows_service_onlineresource"       "https://example.com/"
+"ows_contactperson"                "ACME contact"
 "ows_contactposition"              "pointOfContact"
 "ows_contactvoicetelephone"        ""
 "ows_contactfacsimiletelephone"    ""
 "ows_addresstype"                  "Work"
 "ows_address"                      ""
-"ows_city"                         "Apeldoorn"
+"ows_city"                         "Amsterdam"
 "ows_stateorprovince"              ""
 "ows_postcode"                     ""
 "ows_country"                      "Nederland"
-"ows_contactelectronicmailaddress" "BeheerPDOK@kadaster.nl"
+"ows_contactelectronicmailaddress" "acme@example.com"
 "ows_hoursofservice"               ""
-"ows_contactinstructions"          "https://www.pdok.nl/contact"
+"ows_contactinstructions"          "https://example.com/contact"
 "ows_role"                         ""
 "ows_srs"                          "EPSG:28992 EPSG:25831 EPSG:25832 EPSG:3034 EPSG:3035 EPSG:3857 EPSG:4258 EPSG:4326"
 "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0/deed.nl;Geen beperkingen"
@@ -86,17 +86,17 @@ METADATA
 "wfs_languages"                  "eng" #first default, values according ISO 639-2/B
 "wfs_extent"                     "-25000 250000 280000 860000"
 "wfs_namespace_prefix"           "nationaleparken"
-"wfs_namespace_uri"              "http://nationaleparken.geonovum.nl"
-"wfs_onlineresource"             "https://service.pdok.nl/rvo/nationaleparken/wfs/v2_0"
+"wfs_namespace_uri"              "http://example.com"
+"wfs_onlineresource"             "https://example.com/example"
 "wfs_getfeature_formatlist"      "GEOJSON,JSON,XML,GML3" # List of earlier defined outputformat names
 "wfs_maxfeatures"                "1000"
 "wfs_maxfeatures_ignore_for_resulttype_hits" "true"
 "wfs_storedqueries"              "urn:x-inspire:storedQuery:nationaleparken:FullDataset"
-"wfs_urn:x-inspire:storedQuery:nationaleparken:FullDataset_filedef" "/srv/data/config/storedquery_fulldataset.xml"
-"wfs_inspire_metadataurl_href"   "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=b87a0095-2ad7-4dbb-81a1-fed060df79e1"
+"wfs_urn:x-inspire:storedQuery:example:FullDataset_filedef" "/srv/data/config/storedquery_fulldataset.xml"
+"wfs_inspire_metadataurl_href"   "https://example.com/metadata/id"
 "wfs_inspire_metadataurl_format" "application/vnd.ogc.csw.GetRecordByIdResponse_xml"
 "wfs_inspire_capabilities"       "url"
-"wfs_inspire_dsid_code"          "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=#MD_DataIdentification"
+"wfs_inspire_dsid_code"          "https://example.com/metadata/id"
 END
 END
 
@@ -112,9 +112,9 @@ PROJECTION
 END
 TEMPLATE void
 METADATA
-"wfs_title"                             "Nationale Parken"
-"wfs_abstract"                          "Nationaleparken Beschermde gebieden"
-"wfs_keywordlist"                       "Beschermde gebieden"
+"wfs_title"                             "Example"
+"wfs_abstract"                          "Example description"
+"wfs_keywordlist"                       "example"
 "wfs_srs"                               "EPSG:28992 EPSG:25831 EPSG:25832 EPSG:3034 EPSG:3035 EPSG:3857 EPSG:4258 EPSG:4326"
 "wfs_extent"                            "-25000 250000 280000 860000" #DEFAULT !!! belangrijk, anders is performance slecht
 "wfs_include_items"                     "all" # required for getfeatureinfo
@@ -139,7 +139,7 @@ METADATA
 "gml_types"                             "auto"
 "ows_metadataurl_type"                  "TC211"
 "ows_metadataurl_format"                "text/plain"
-"ows_metadataurl_href"                  "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=4961d305-fbb5-426a-9ba3-53e1ca5f3b18"
+"ows_metadataurl_href"                  "https://example.com/example"
 END
 
 END # LAYER
