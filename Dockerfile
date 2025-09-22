@@ -81,7 +81,7 @@ RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
     cmake --build . && \
     cmake --build . --target install
 
-ENV MAPSERVER_VERSION="8.4.0"
+ENV MAPSERVER_VERSION="8.4.1"
 RUN mkdir /usr/local/src/mapserver
 RUN wget https://github.com/MapServer/MapServer/releases/download/rel-$(echo $MAPSERVER_VERSION | sed -e "s/\./-/g")/mapserver-${MAPSERVER_VERSION}.tar.gz
 RUN tar -xf mapserver-8.*.tar.gz --strip-components 1  -C /usr/local/src/mapserver
