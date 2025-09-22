@@ -14,6 +14,8 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.image }}
+          flavor: |
+            latest=false
           tags: |
             type=semver,pattern={{major}}
             type=semver,pattern={{major}}.{{minor}}
