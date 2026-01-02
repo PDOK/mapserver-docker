@@ -143,7 +143,7 @@ MAP
       "wfs_namespace_prefix"           "example"
       "wfs_namespace_uri"              "http://example.unknown.org"      
       "wfs_maxfeatures"                "1000"
-      "wfs_onlineresource"             "http://localhost"
+      "wfs_onlineresource"             "http://localhost/mapserver"
 
       "wms_allow_getmap_without_styles" "true"
       "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8,image/svg+xml"
