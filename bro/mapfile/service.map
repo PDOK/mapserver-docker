@@ -1,0 +1,197 @@
+MAP
+  NAME          ""
+
+
+  CONFIG        "MS_ERRORFILE" "stderr"
+  EXTENT        -25000 250000 280000 860000
+  UNITS         meters
+  STATUS        ON
+  DEBUG         5
+  MAXSIZE       4000
+  PROJECTION
+    "init=epsg:28992"
+  END
+
+  WEB
+    METADATA
+      "ows_enable_request"               "*"
+      "ows_fees"                         "NONE"
+      "ows_contactorganization"          "PDOK"
+      "ows_schemas_location"             "http://schemas.opengis.net"
+      "ows_service_onlineresource"       "http://localhost/"
+      "ows_contactperson"                "KlantContactCenter PDOK"
+      "ows_contactposition"              "pointOfContact"
+      "ows_contactvoicetelephone"        ""
+      "ows_contactfacsimiletelephone"    ""
+      "ows_addresstype"                  "Work"
+      "ows_address"                      ""
+      "ows_city"                         "Apeldoorn"
+      "ows_stateorprovince"              ""
+      "ows_postcode"                     ""
+      "ows_country"                      "Nederland"
+      "ows_contactelectronicmailaddress" "BeheerPDOK@kadaster.nl"
+      "ows_hoursofservice"               ""
+      "ows_contactinstructions"          "https://www.pdok.nl/contact"
+      "ows_role"                         ""
+      "ows_srs"                          "EPSG:28992 EPSG:25831 EPSG:25832 EPSG:3034 EPSG:3035 EPSG:3857 EPSG:4258 EPSG:4326 CRS:84"
+      "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0/deed.nl;Geen beperkingen"
+    END
+  END
+
+  OUTPUTFORMAT
+    NAME "GEOJSON"       # format name (visible as format in the 1.0.0 capabilities)
+    DRIVER "OGR/GEOJSON"
+    MIMETYPE "application/json; subtype=geojson"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+    FORMATOPTION "LCO:ID_FIELD=fuuid"
+    FORMATOPTION "LCO:ID_TYPE=STRING"
+    FORMATOPTION "LCO:WRITE_BBOX=YES"
+  END
+
+  OUTPUTFORMAT
+    NAME "JSON"
+    DRIVER "OGR/GEOJSON"
+    MIMETYPE "application/json"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+    FORMATOPTION "LCO:ID_FIELD=fuuid"
+    FORMATOPTION "LCO:ID_TYPE=STRING"
+    FORMATOPTION "LCO:WRITE_BBOX=YES"
+  END
+
+  OUTPUTFORMAT
+    NAME "XML"
+    DRIVER "OGR/GML"
+    MIMETYPE "text/xml"
+    FORMATOPTION "DSCO:XSISCHEMA=EXTERNAL"
+    FORMATOPTION "DSCO:PREFIX=bro-geomorfologischekaart"
+    FORMATOPTION "DSCO:TARGET_NAMESPACE=http://www.wur.nl"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+  END
+
+  OUTPUTFORMAT
+    NAME "GML3"
+    DRIVER "OGR/GML"
+    MIMETYPE "text/xml; subtype=gml/3.1.1"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+  END
+
+  OUTPUTFORMAT
+    DRIVER "TEMPLATE"
+    FORMATOPTION "FILE=/srv/data/config/templates/feature-info.html"
+  END
+
+  WEB
+    METADATA
+      "ows_sld_enabled"                "true"
+      "ows_title"                      "BRO Geomorfologische kaart (GMM) WMS"
+      "ows_abstract"                   "Basisregistratie Ondergrond (BRO) Geomorfologischekaart"
+      "ows_keywordlist"                "geomorfologie,genese,landvorm,relief,ouderdom,bodem,geologie,v2019-2-31,infoMapAccessService"
+      "ows_accessconstraints"          "https://creativecommons.org/publicdomain/zero/1.0/deed.nl"
+      "wms_languages"                  "dut" #first default, values according ISO 639-2/B
+      "wms_extent"                     "-25000 250000 280000 860000"
+      "wms_feature_info_mime_type"     "application/vnd.ogc.gml,text/html,text/plain,application/json,application/json; subtype=geojson,text/xml,text/xml; subtype=gml/3.1.1"
+      "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8"
+      "wms_enable_request"             "* !GetStyles !DescribeLayer"
+      "wms_keywordlist_ISO_items"      "infoMapAccessService"
+      "wms_keywordlist_vocabulary"     "ISO"
+      "wms_bbox_extended"              "true" # include boundingboxes for all projections (ETF find first layer step looks for BB in EPSG:3035,EPSG:4326 or CRS:84). If not set the ETF test will result in a GetMetadataUrl failure
+      "wms_namespace_prefix"           "bro-geomorfologischekaart"
+      "wms_onlineresource"             "http://localhost/mapserver?"
+      "wms_inspire_metadataurl_href"   "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=d1cb16ca-2029-454f-b3f1-f70bceaf62c1"
+      "wms_inspire_metadataurl_format" "application/vnd.ogc.csw.GetRecordByIdResponse_xml"
+      "wms_inspire_capabilities"       "url"
+      "wms_allow_getmap_without_styles" "true"
+    END # METADATA
+  END # WEB
+
+  LAYER
+    STATUS ON
+    NAME "geomorphological_area_raster"
+    GROUP "geomorphological_area"
+    STYLEITEM "sld:///srv/data/BRO-GMM-GeomorfologischeKaart_V2024-01.sld"
+    CONNECTIONTYPE OGR
+    CONNECTION "/srv/data/bro-geomorfologischekaart.gpkg"
+    DATA "geomorphological_area"
+    MINSCALEDENOM 50000
+    TYPE POLYGON
+    PROJECTION
+    "init=epsg:28992"  # Define the source projection to enable reprojection
+    END
+    TEMPLATE VOID
+    METADATA
+    "ows_title"                 ""
+    "wms_abstract"              ""
+    "wms_keywordlist"           "" # At leat one keyword is required M-CR-V01##R.32.R.35
+    "wms_extent"                "-25000 250000 280000 860000"
+    "gml_include_items"         "value_list" # required for getfeatureinfo
+    "wms_include_items"         "value_list" # required for getfeatureinfo
+    "wms_authorityurl_name"     "bzk"
+    "wms_authorityurl_href"     "http://www.wur.nl"
+    "wms_identifier_authority"  "bzk"
+    "wms_identifier_value"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=#MD_DataIdentification"
+    "ows_metadataurl_type"      "TC211"
+    "ows_metadataurl_format"    "application/xml"
+    "ows_metadataurl_href"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id="
+    "wms_group_title" "Geomorfologische kaart van nederland (1:50.000)"
+    "wms_group_abstract" "Geomorfologie is de wetenschap die zich bezig houdt met het bestuderen van de vormen van het aardoppervlak en de processen die bij het ontstaan daarvan een rol spelen of hebben gespeeld. De Geomorfologische kaart van Nederland 1:50.000 (2019) beschrijft de in Nederland voorkomende landvormen. De eenheden op de kaart geven informatie over het type vorm, de ontstaanswijze, het reliëf en de ouderdom van de landvormen. Daarnaast wordt, indien relevant, aanvullende informatie (toevoegingen) gegeven over afwijkende geologische afzettingen in de bovengrond, bijzonderheden in het reliëf, of het voorkomen van actieve geomorfologische processen."
+    "wms_group_style_name" "geomorphological_area"
+    "wms_group_style_title" "Geomorfologische kaart van nederland (1:50.000)"
+    END # METADATA
+  END # LAYER
+
+  LAYER
+    STATUS ON
+    NAME "geomorphological_area_gpkg"
+    GROUP "geomorphological_area"
+    STYLEITEM "sld:///srv/data/BRO-GMM-GeomorfologischeKaart_V2024-01.sld"
+    CONNECTIONTYPE OGR
+    CONNECTION "/srv/data/bro-geomorfologischekaart.gpkg"
+    DATA "geomorphological_area"
+    MAXSCALEDENOM 50000
+    TYPE POLYGON
+    PROJECTION
+        "init=epsg:28992"  # Define the source projection to enable reprojection
+    END
+    TEMPLATE VOID
+    METADATA
+      "ows_title"                 ""
+      "wms_abstract"              ""
+      "wms_keywordlist"           "" # At leat one keyword is required M-CR-V01##R.32.R.35
+      "wms_extent"                "-25000 250000 280000 860000"
+      "gml_geometries"            "geom"
+      "wms_featureid"             "puuid"
+      "gml_featureid"             "puuid" # note that this config does not work - this results in a gml_featureid with an autoincrement integer - which is acceptable
+      "gml_include_items"         "all" # required for getfeatureinfo
+      "wms_include_items"         "all" # required for getfeatureinfo
+      "gml_exclude_items"         "puuid"
+      "wms_exclude_items"         "puuid"
+      "wms_authorityurl_name"     "bzk"
+      "wms_authorityurl_href"     "http://www.wur.nl"
+      "wms_identifier_authority"  "bzk"
+      "wms_identifier_value"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=#MD_DataIdentification"
+      "ows_metadataurl_type"      "TC211"
+      "ows_metadataurl_format"    "application/xml"
+      "ows_metadataurl_href"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id="
+      "wms_group_title" "Geomorfologische kaart van nederland (1:50.000)"
+      "wms_group_abstract" "Geomorfologie is de wetenschap die zich bezig houdt met het bestuderen van de vormen van het aardoppervlak en de processen die bij het ontstaan daarvan een rol spelen of hebben gespeeld. De Geomorfologische kaart van Nederland 1:50.000 (2019) beschrijft de in Nederland voorkomende landvormen. De eenheden op de kaart geven informatie over het type vorm, de ontstaanswijze, het reliëf en de ouderdom van de landvormen. Daarnaast wordt, indien relevant, aanvullende informatie (toevoegingen) gegeven over afwijkende geologische afzettingen in de bovengrond, bijzonderheden in het reliëf, of het voorkomen van actieve geomorfologische processen."
+      "wms_group_style_name" "geomorphological_area"
+      "wms_group_style_title" "Geomorfologische kaart van nederland (1:50.000)"
+    END # METADATA
+
+
+  END # LAYER
+
+
+
+
+
+  
+END # MAP

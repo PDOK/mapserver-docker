@@ -20,6 +20,9 @@ WFS and WCS services.
 docker build -t pdok/mapserver .
 ```
 
+docker run -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf -e MS_MAPFILE=/srv/data/mapfile/service.map -e SERVICE_TYPE=WMS --rm -d \
+-p 80:80 --name mapserver-example -v `pwd`/inv:/srv/data pdok/mapserver
+
 ### docker run wms
 
 ```shell

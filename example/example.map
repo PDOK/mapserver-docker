@@ -159,6 +159,7 @@ MAP
 
   LAYER
     NAME "example"
+    STYLEITEM "sld:///srv/data/example.sld"
     STATUS ON
     TYPE POLYGON
     ## layer debug settings for mapserver, remove comment in lines below to enable
@@ -188,14 +189,7 @@ MAP
       "wms_include_items"            "all"
     END
 
-    CLASSGROUP "example:style"
-    CLASS
-      NAME "example"
-      GROUP "example:style"
-      STYLE
-        COLOR 230 230 0
-      END
-    END
+
 
     PROJECTION
       "init=epsg:4326"

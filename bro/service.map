@@ -1,0 +1,2881 @@
+MAP
+  NAME          ""
+
+
+  CONFIG        "MS_ERRORFILE" "stderr"
+  EXTENT        -25000 250000 280000 860000
+  UNITS         meters
+  STATUS        ON
+  DEBUG         5
+  MAXSIZE       4000
+  PROJECTION
+    "init=epsg:28992"
+  END
+
+  WEB
+    METADATA
+      "ows_enable_request"               "*"
+      "ows_fees"                         "NONE"
+      "ows_contactorganization"          "PDOK"
+      "ows_schemas_location"             "http://schemas.opengis.net"
+      "ows_service_onlineresource"       "http://localhost/"
+      "ows_contactperson"                "KlantContactCenter PDOK"
+      "ows_contactposition"              "pointOfContact"
+      "ows_contactvoicetelephone"        ""
+      "ows_contactfacsimiletelephone"    ""
+      "ows_addresstype"                  "Work"
+      "ows_address"                      ""
+      "ows_city"                         "Apeldoorn"
+      "ows_stateorprovince"              ""
+      "ows_postcode"                     ""
+      "ows_country"                      "Nederland"
+      "ows_contactelectronicmailaddress" "BeheerPDOK@kadaster.nl"
+      "ows_hoursofservice"               ""
+      "ows_contactinstructions"          "https://www.pdok.nl/contact"
+      "ows_role"                         ""
+      "ows_srs"                          "EPSG:28992 EPSG:25831 EPSG:25832 EPSG:3034 EPSG:3035 EPSG:3857 EPSG:4258 EPSG:4326 CRS:84"
+      "ows_accessconstraints"            "otherRestrictions;http://creativecommons.org/publicdomain/mark/1.0/deed.nl;Geen beperkingen"
+    END
+  END
+
+  OUTPUTFORMAT
+    NAME "GEOJSON"       # format name (visible as format in the 1.0.0 capabilities)
+    DRIVER "OGR/GEOJSON"
+    MIMETYPE "application/json; subtype=geojson"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+    FORMATOPTION "LCO:ID_FIELD=fuuid"
+    FORMATOPTION "LCO:ID_TYPE=STRING"
+    FORMATOPTION "LCO:WRITE_BBOX=YES"
+  END
+
+  OUTPUTFORMAT
+    NAME "JSON"
+    DRIVER "OGR/GEOJSON"
+    MIMETYPE "application/json"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+    FORMATOPTION "LCO:ID_FIELD=fuuid"
+    FORMATOPTION "LCO:ID_TYPE=STRING"
+    FORMATOPTION "LCO:WRITE_BBOX=YES"
+  END
+
+  OUTPUTFORMAT
+    NAME "XML"
+    DRIVER "OGR/GML"
+    MIMETYPE "text/xml"
+    FORMATOPTION "DSCO:XSISCHEMA=EXTERNAL"
+    FORMATOPTION "DSCO:PREFIX=bro-geomorfologischekaart"
+    FORMATOPTION "DSCO:TARGET_NAMESPACE=http://www.wur.nl"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+  END
+
+  OUTPUTFORMAT
+    NAME "GML3"
+    DRIVER "OGR/GML"
+    MIMETYPE "text/xml; subtype=gml/3.1.1"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "USE_FEATUREID=true"
+  END
+
+  OUTPUTFORMAT
+    DRIVER "TEMPLATE"
+    FORMATOPTION "FILE=/srv/data/config/templates/feature-info.html"
+  END
+
+  WEB
+    METADATA
+      "ows_sld_enabled"                "false"
+      "ows_title"                      "BRO Geomorfologische kaart (GMM) WMS"
+      "ows_abstract"                   "Basisregistratie Ondergrond (BRO) Geomorfologischekaart"
+      "ows_keywordlist"                "geomorfologie,genese,landvorm,relief,ouderdom,bodem,geologie,v2019-2-31,infoMapAccessService"
+      "ows_accessconstraints"          "https://creativecommons.org/publicdomain/zero/1.0/deed.nl"
+      "wms_languages"                  "dut" #first default, values according ISO 639-2/B
+      "wms_extent"                     "-25000 250000 280000 860000"
+      "wms_feature_info_mime_type"     "application/vnd.ogc.gml,text/html,text/plain,application/json,application/json; subtype=geojson,text/xml,text/xml; subtype=gml/3.1.1"
+      "wms_getmap_formatlist"          "image/png,image/jpeg,image/png; mode=8bit,image/vnd.jpeg-png,image/vnd.jpeg-png8"
+      "wms_enable_request"             "* !GetStyles !DescribeLayer"
+      "wms_keywordlist_ISO_items"      "infoMapAccessService"
+      "wms_keywordlist_vocabulary"     "ISO"
+      "wms_bbox_extended"              "true" # include boundingboxes for all projections (ETF find first layer step looks for BB in EPSG:3035,EPSG:4326 or CRS:84). If not set the ETF test will result in a GetMetadataUrl failure
+      "wms_namespace_prefix"           "bro-geomorfologischekaart"
+      "wms_onlineresource"             "http://localhost/mapserver?"
+      "wms_inspire_metadataurl_href"   "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=d1cb16ca-2029-454f-b3f1-f70bceaf62c1"
+      "wms_inspire_metadataurl_format" "application/vnd.ogc.csw.GetRecordByIdResponse_xml"
+      "wms_inspire_capabilities"       "url"
+      "wms_allow_getmap_without_styles" "true"
+    END # METADATA
+  END # WEB
+
+
+  LAYER
+    STATUS ON
+    NAME "geomorphological_area_raster"
+    GROUP "geomorphological_area"
+    DATA "/srv/data/tif/bro-geomorfologischekaart.tif"
+    PROCESSING "RESAMPLE=NEAREST"
+    PROCESSING "CLOSE_CONNECTION=ALWAYS"
+    MINSCALEDENOM 50000
+    TYPE RASTER
+    PROJECTION
+        "init=epsg:28992"  # Define the source projection to enable reprojection
+    END
+    TEMPLATE VOID
+    METADATA
+      "ows_title"                 ""
+      "wms_abstract"              ""
+      "wms_keywordlist"           "" # At leat one keyword is required M-CR-V01##R.32.R.35
+      "wms_extent"                "-25000 250000 280000 860000"
+      "gml_include_items"         "value_list" # required for getfeatureinfo
+      "wms_include_items"         "value_list" # required for getfeatureinfo
+      "wms_authorityurl_name"     "bzk"
+      "wms_authorityurl_href"     "http://www.wur.nl"
+      "wms_identifier_authority"  "bzk"
+      "wms_identifier_value"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=#MD_DataIdentification"
+      "ows_metadataurl_type"      "TC211"
+      "ows_metadataurl_format"    "application/xml"
+      "ows_metadataurl_href"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id="
+      "wms_group_title" "Geomorfologische kaart van nederland (1:50.000)"
+      "wms_group_abstract" "Geomorfologie is de wetenschap die zich bezig houdt met het bestuderen van de vormen van het aardoppervlak en de processen die bij het ontstaan daarvan een rol spelen of hebben gespeeld. De Geomorfologische kaart van Nederland 1:50.000 (2019) beschrijft de in Nederland voorkomende landvormen. De eenheden op de kaart geven informatie over het type vorm, de ontstaanswijze, het reliëf en de ouderdom van de landvormen. Daarnaast wordt, indien relevant, aanvullende informatie (toevoegingen) gegeven over afwijkende geologische afzettingen in de bovengrond, bijzonderheden in het reliëf, of het voorkomen van actieve geomorfologische processen."
+      "wms_group_style_name" "geomorphological_area"
+      "wms_group_style_title" "Geomorfologische kaart van nederland (1:50.000)"
+    END # METADATA
+
+        CLASS
+      NAME "Afbraakwand"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "A41")
+      STYLE
+        COLOR "#b55e70"
+      END
+    END
+    CLASS
+      NAME "Ondergraven stuwwalzijde"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "A42")
+      STYLE
+        COLOR "#d50000"
+      END
+    END
+    CLASS
+      NAME "Lösswand"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "A51")
+      STYLE
+        COLOR "#f5977f"
+      END
+    END
+    CLASS
+      NAME "Klif"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "A71")
+      STYLE
+        COLOR "#b3598a"
+      END
+    END
+    CLASS
+      NAME "Stuwwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B11")
+      STYLE
+        COLOR "#fe2a00"
+      END
+    END
+    CLASS
+      NAME "Stuwwal van gestuwde grondmorene"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B12")
+      STYLE
+        COLOR "#fe2a00"
+      END
+    END
+    CLASS
+      NAME "Grondmorenerug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B13")
+      STYLE
+        COLOR "#e64d00"
+      END
+    END
+    CLASS
+      NAME "IJsstroomheuvelrug, 'megaflute'"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B14")
+      STYLE
+        COLOR "#e82a70"
+      END
+    END
+    CLASS
+      NAME "Smeltwaterheuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B15")
+      STYLE
+        COLOR "#d52a71"
+      END
+    END
+    CLASS
+      NAME "Smeltwaterrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B16")
+      STYLE
+        COLOR "#d52a8d"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-heuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B31")
+      STYLE
+        COLOR "#fe2bab"
+      END
+    END
+    CLASS
+      NAME "Terrasafzettingsrest-heuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B41")
+      STYLE
+        COLOR "#c05000"
+      END
+    END
+    CLASS
+      NAME "Terrasrest-heuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B42")
+      STYLE
+        COLOR "#d52afe"
+      END
+    END
+    CLASS
+      NAME "Terrasrest-rug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B43")
+      STYLE
+        COLOR "#71e950"
+      END
+    END
+    CLASS
+      NAME "Stroomrug of stroomgordel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B44")
+      STYLE
+        COLOR "#8dfe2a"
+      END
+    END
+    CLASS
+      NAME "Oeverwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B45")
+      STYLE
+        COLOR "#a7fe00"
+      END
+    END
+    CLASS
+      NAME "Kronkelwaardrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B46")
+      STYLE
+        COLOR "#98e600"
+      END
+    END
+    CLASS
+      NAME "Crevasserug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B47")
+      STYLE
+        COLOR "#a5f57a"
+      END
+    END
+    CLASS
+      NAME "Lössrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B51")
+      STYLE
+        COLOR "#ea6e00"
+      END
+    END
+    CLASS
+      NAME "Dekzandkopje"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B52")
+      STYLE
+        COLOR "#d5c050"
+      END
+    END
+    CLASS
+      NAME "Dekzandrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B53")
+      STYLE
+        COLOR "#d5d52a"
+      END
+    END
+    CLASS
+      NAME "Dekzandwelving"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B54")
+      STYLE
+        COLOR "#e9c08d"
+      END
+    END
+    CLASS
+      NAME "Geulranddekzandrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B55")
+      STYLE
+        COLOR "#c0d550"
+      END
+    END
+    CLASS
+      NAME "Gordeldekzandrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B56")
+      STYLE
+        COLOR "#c0d550"
+      END
+    END
+    CLASS
+      NAME "Rivierduin"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B57")
+      STYLE
+        COLOR "#ffff73"
+      END
+    END
+    CLASS
+      NAME "Landduin"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B58")
+      STYLE
+        COLOR "#fee900"
+      END
+    END
+    CLASS
+      NAME "Stuifdijk"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B59")
+      STYLE
+        COLOR "#fefe00"
+      END
+    END
+    CLASS
+      NAME "Meerwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B61")
+      STYLE
+        COLOR "#d5e950"
+      END
+    END
+    CLASS
+      NAME "Getij-inversierug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B71")
+      STYLE
+        COLOR "#50fe8d"
+      END
+    END
+    CLASS
+      NAME "Getij-oeverwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B72")
+      STYLE
+        COLOR "#50fea7"
+      END
+    END
+    CLASS
+      NAME "Getij-riviermondrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B73")
+      STYLE
+        COLOR "#8dfe71"
+      END
+    END
+    CLASS
+      NAME "Kustwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B74")
+      STYLE
+        COLOR "#d5e971"
+      END
+    END
+    CLASS
+      NAME "Kwelderwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B75")
+      STYLE
+        COLOR "#71e9a7"
+      END
+    END
+    CLASS
+      NAME "Strandwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B76")
+      STYLE
+        COLOR "#e9e971"
+      END
+    END
+    CLASS
+      NAME "Strandwalrest-dijk"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B77")
+      STYLE
+        COLOR "#e9d571"
+      END
+    END
+    CLASS
+      NAME "Veenrest-dijk"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B81")
+      STYLE
+        COLOR "#a750e9"
+      END
+    END
+    CLASS
+      NAME "Veenrest-heuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B82")
+      STYLE
+        COLOR "#c0a7fe"
+      END
+    END
+    CLASS
+      NAME "Terp (wierd) of hoogwatervluchtplaats"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B91")
+      STYLE
+        COLOR "#fe0000"
+      END
+    END
+    CLASS
+      NAME "Storthoop"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B92")
+      STYLE
+        COLOR "#d52cae"
+      END
+    END
+    CLASS
+      NAME "Stuwwalplateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "D11")
+      STYLE
+        COLOR "#fe5050"
+      END
+    END
+    CLASS
+      NAME "Schiervlakterest-plateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "D31")
+      STYLE
+        COLOR "#d550d5"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-plateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "D32")
+      STYLE
+        COLOR "#ea73ad"
+      END
+    END
+    CLASS
+      NAME "Terrasrest-plateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "D41")
+      STYLE
+        COLOR "#a251d5"
+      END
+    END
+    CLASS
+      NAME "Breuktrap in terrasafzettingsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E01")
+      STYLE
+        COLOR "#c08d71"
+      END
+    END
+    CLASS
+      NAME "Smeltwaterterras, 'Kame'"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E11")
+      STYLE
+        COLOR "#fe8d8d"
+      END
+    END
+    CLASS
+      NAME "Daluitspoelingsrest-terras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E21")
+      STYLE
+        COLOR "#d5a072"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-terras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E31")
+      STYLE
+        COLOR "#fdb791"
+      END
+    END
+    CLASS
+      NAME "Lithologisch bepaalde terrasvorm"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E32")
+      STYLE
+        COLOR "#c08d8d"
+      END
+    END
+    CLASS
+      NAME "Plateauterras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E41")
+      STYLE
+        COLOR "#a771c0"
+      END
+    END
+    CLASS
+      NAME "Tussenterras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E42")
+      STYLE
+        COLOR "#a7a651"
+      END
+    END
+    CLASS
+      NAME "Dalwandterras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E43")
+      STYLE
+        COLOR "#a78c72"
+      END
+    END
+    CLASS
+      NAME "Dalvlakteterras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E44")
+      STYLE
+        COLOR "#a7d52a"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige horst"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F01")
+      STYLE
+        COLOR "#d5c071"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige grondmorenerug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F11")
+      STYLE
+        COLOR "#ffa187"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige smeltwaterterrasrest"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F12")
+      STYLE
+        COLOR "#b89a76"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige vereffeningsrest"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F31")
+      STYLE
+        COLOR "#e98dc0"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige terrasrest"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F41")
+      STYLE
+        COLOR "#8dd500"
+      END
+    END
+    CLASS
+      NAME "Dekzandplateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F51")
+      STYLE
+        COLOR "#d5c02a"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige getij-afzetting"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F71")
+      STYLE
+        COLOR "#e9a7c0"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige veenrest"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F81")
+      STYLE
+        COLOR "#c08dfe"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige storthoop, opgehoogd of opgespoten terrein, of kunstmatig eiland"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F91")
+      STYLE
+        COLOR "#e971c0"
+      END
+    END
+    CLASS
+      NAME "Smeltwaterwaaier, Sandr"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "G11")
+      STYLE
+        COLOR "#fe8dc0"
+      END
+    END
+    CLASS
+      NAME "Daluitspoelingswaaier"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "G21")
+      STYLE
+        COLOR "#d58d54"
+      END
+    END
+    CLASS
+      NAME "Doorbraakwaaier"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "G41")
+      STYLE
+        COLOR "#8dc071"
+      END
+    END
+    CLASS
+      NAME "Horstglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H01")
+      STYLE
+        COLOR "#d58d71"
+      END
+    END
+    CLASS
+      NAME "Stuwwalglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H11")
+      STYLE
+        COLOR "#fe9c50"
+      END
+    END
+    CLASS
+      NAME "Grondmoreneglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H12")
+      STYLE
+        COLOR "#fe8d50"
+      END
+    END
+    CLASS
+      NAME "Grondmoreneglooiing of smeltwaterglooiing met resten van grondmorene"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H13")
+      STYLE
+        COLOR "#e98d8d"
+      END
+    END
+    CLASS
+      NAME "Glooiing van sneeuwsmeltwaterafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H21")
+      STYLE
+        COLOR "#c0a750"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrestglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H31")
+      STYLE
+        COLOR "#fe71d5"
+      END
+    END
+    CLASS
+      NAME "Glooiing van hellingafspoelingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H32")
+      STYLE
+        COLOR "#c18d2b"
+      END
+    END
+    CLASS
+      NAME "Lössglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H33")
+      STYLE
+        COLOR "#c14d00"
+      END
+    END
+    CLASS
+      NAME "Glooiing in terrasafzettingsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H41")
+      STYLE
+        COLOR "#a7a771"
+      END
+    END
+    CLASS
+      NAME "Glooiing van beekdalzijde"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H42")
+      STYLE
+        COLOR "#8dc050"
+      END
+    END
+    CLASS
+      NAME "Stroomrugglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H43")
+      STYLE
+        COLOR "#b0ed7a"
+      END
+    END
+    CLASS
+      NAME "Rivierstrandglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H44")
+      STYLE
+        COLOR "#fee971"
+      END
+    END
+    CLASS
+      NAME "Gordeldekzandglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H51")
+      STYLE
+        COLOR "#fed550"
+      END
+    END
+    CLASS
+      NAME "Kustduinglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H52")
+      STYLE
+        COLOR "#d5e971"
+      END
+    END
+    CLASS
+      NAME "Veenrestglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H61")
+      STYLE
+        COLOR "#a7a7fe"
+      END
+    END
+    CLASS
+      NAME "Zeestrandglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H71")
+      STYLE
+        COLOR "#fee971"
+      END
+    END
+    CLASS
+      NAME "Grondmorenewelvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L11")
+      STYLE
+        COLOR "#fec071"
+      END
+    END
+    CLASS
+      NAME "Welvingen in sneeuwsmeltwaterafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L21")
+      STYLE
+        COLOR "#c0c08d"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-welvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L31")
+      STYLE
+        COLOR "#c07099"
+      END
+    END
+    CLASS
+      NAME "Terrasafzettingswelvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L41")
+      STYLE
+        COLOR "#c0fec0"
+      END
+    END
+    CLASS
+      NAME "Meanderruggen en -geulen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L42")
+      STYLE
+        COLOR "#a7e900"
+      END
+    END
+    CLASS
+      NAME "Welvingen in rivierafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L43")
+      STYLE
+        COLOR "#a7fe50"
+      END
+    END
+    CLASS
+      NAME "Dekzandwelvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L51")
+      STYLE
+        COLOR "#c0c02a"
+      END
+    END
+    CLASS
+      NAME "Gordeldekzandwelvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L52")
+      STYLE
+        COLOR "#e9d571"
+      END
+    END
+    CLASS
+      NAME "Kustduinen met bijbehorende vlakten en laagten"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L53")
+      STYLE
+        COLOR "#fec000"
+      END
+    END
+    CLASS
+      NAME "Landduinen met bijbehorende vlakten en laagten"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L54")
+      STYLE
+        COLOR "#ffff38"
+      END
+    END
+    CLASS
+      NAME "Welvingen in zee- of meerbodemafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L61")
+      STYLE
+        COLOR "#9cd99d"
+      END
+    END
+    CLASS
+      NAME "Binnendelta-welvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L71")
+      STYLE
+        COLOR "#c0fec0"
+      END
+    END
+    CLASS
+      NAME "Welvingen in plaatselijk gemoerde getij-afzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L72")
+      STYLE
+        COLOR "#a7fec0"
+      END
+    END
+    CLASS
+      NAME "Welvingen in kustoverslagafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L73")
+      STYLE
+        COLOR "#a7fed5"
+      END
+    END
+    CLASS
+      NAME "Welvingen in getij-afzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L74")
+      STYLE
+        COLOR "#71fec0"
+      END
+    END
+    CLASS
+      NAME "Welvingen in getij-aanwassen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L75")
+      STYLE
+        COLOR "#8dfed5"
+      END
+    END
+    CLASS
+      NAME "Welvingen in zandplaten"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L76")
+      STYLE
+        COLOR "#fefe8d"
+      END
+    END
+    CLASS
+      NAME "Veenrest-ruggen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L81")
+      STYLE
+        COLOR "#c0a7e9"
+      END
+    END
+    CLASS
+      NAME "Storthopen met grind-, zand-, kleigaten of ijzerkuilen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L91")
+      STYLE
+        COLOR "#fe8dfe"
+      END
+    END
+    CLASS
+      NAME "Kunstmatig gecreëerd reliëf voor recreatiedoeleinden zoals golfbanen, motorsportterreinen en parken"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L92")
+      STYLE
+        COLOR "#787878"
+      END
+    END
+    CLASS
+      NAME "Vlakte van grondmorene"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M11")
+      STYLE
+        COLOR "#fed5a7"
+      END
+    END
+    CLASS
+      NAME "Vlakte van smeltwaterafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M12")
+      STYLE
+        COLOR "#fec0c0"
+      END
+    END
+    CLASS
+      NAME "Vlakte van sneeuwsmeltwaterafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M21")
+      STYLE
+        COLOR "#d5c0a7"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-vlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M31")
+      STYLE
+        COLOR "#fea7d5"
+      END
+    END
+    CLASS
+      NAME "Terrasafzettingsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M41")
+      STYLE
+        COLOR "#9eca7f"
+      END
+    END
+    CLASS
+      NAME "Terrasvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M42")
+      STYLE
+        COLOR "#8dd571"
+      END
+    END
+    CLASS
+      NAME "Binnendelta-vlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M43")
+      STYLE
+        COLOR "#e2fec0"
+      END
+    END
+    CLASS
+      NAME "Beekoverstromingsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M44")
+      STYLE
+        COLOR "#71d571"
+      END
+    END
+    CLASS
+      NAME "Vlakte van rivierafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M45")
+      STYLE
+        COLOR "#8dfea7"
+      END
+    END
+    CLASS
+      NAME "Rivierkomvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M46")
+      STYLE
+        COLOR "#71fea7"
+      END
+    END
+    CLASS
+      NAME "Vlakte van fluviatiele doorbraakafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M47")
+      STYLE
+        COLOR "#c0e9c0"
+      END
+    END
+    CLASS
+      NAME "Rivierkom- en oeverwalachtige vlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M48")
+      STYLE
+        COLOR "#8dfe8d"
+      END
+    END
+    CLASS
+      NAME "Dekzandvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M51")
+      STYLE
+        COLOR "#e9e9a7"
+      END
+    END
+    CLASS
+      NAME "Gordeldekzandvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M52")
+      STYLE
+        COLOR "#e9d58d"
+      END
+    END
+    CLASS
+      NAME "Vlakte van ten dele verspoelde dekzanden of löss"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M53")
+      STYLE
+        COLOR "#e0e5ab"
+      END
+    END
+    CLASS
+      NAME "Stuifzandvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M54")
+      STYLE
+        COLOR "#fef8a4"
+      END
+    END
+    CLASS
+      NAME "Vlakte van meeropvulling"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M61")
+      STYLE
+        COLOR "#c0fe8d"
+      END
+    END
+    CLASS
+      NAME "Vlakte van zee-of meerbodemafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M62")
+      STYLE
+        COLOR "#71e9d5"
+      END
+    END
+    CLASS
+      NAME "Vlakte van plaatselijk gemoerde getij-afzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M71")
+      STYLE
+        COLOR "#a7c0c0"
+      END
+    END
+    CLASS
+      NAME "Vlakte van getij-afzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M72")
+      STYLE
+        COLOR "#71d5c0"
+      END
+    END
+    CLASS
+      NAME "Vlakte van getij-riviermondafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M73")
+      STYLE
+        COLOR "#8dfec0"
+      END
+    END
+    CLASS
+      NAME "Vlakte van mariene doorbraakafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M74")
+      STYLE
+        COLOR "#a1e9c0"
+      END
+    END
+    CLASS
+      NAME "Zeeboezemvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M75")
+      STYLE
+        COLOR "#00d0db"
+      END
+    END
+    CLASS
+      NAME "Ingesloten strandvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M76")
+      STYLE
+        COLOR "#e9e9c0"
+      END
+    END
+    CLASS
+      NAME "Abrasievlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M77")
+      STYLE
+        COLOR "#e9c0e9"
+      END
+    END
+    CLASS
+      NAME "Strandvlakte, zandplaat of slik"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M78")
+      STYLE
+        COLOR "#fefed5"
+      END
+    END
+    CLASS
+      NAME "Aanwasvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M79")
+      STYLE
+        COLOR "#8de9e9"
+      END
+    END
+    CLASS
+      NAME "Ontgonnen veenvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M81")
+      STYLE
+        COLOR "#a7c0fe"
+      END
+    END
+    CLASS
+      NAME "Ontgonnen veenvlakte met petgaten"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M82")
+      STYLE
+        COLOR "#8dd5fe"
+      END
+    END
+    CLASS
+      NAME "Veenrestvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M83")
+      STYLE
+        COLOR "#d5c0fe"
+      END
+    END
+    CLASS
+      NAME "Boezemland, vlietland, moerassige vlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M84")
+      STYLE
+        COLOR "#8dd5e9"
+      END
+    END
+    CLASS
+      NAME "Veenkoloniale ontginningsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M91")
+      STYLE
+        COLOR "#d5c0c0"
+      END
+    END
+    CLASS
+      NAME "Vlakte ontstaan door afgraving en/of egalisatie van duinen of strandwallen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M92")
+      STYLE
+        COLOR "#e9e92a"
+      END
+    END
+    CLASS
+      NAME "Vlakte ontstaan door afgraving en/of egalisatie"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M93")
+      STYLE
+        COLOR "#c0c0c0"
+      END
+    END
+    CLASS
+      NAME "Doodijsgat"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N11")
+      STYLE
+        COLOR "#770081"
+      END
+    END
+    CLASS
+      NAME "Pingoruïnes"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N21")
+      STYLE
+        COLOR "#8da7fe"
+      END
+    END
+    CLASS
+      NAME "Periglaciale laagte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N22")
+      STYLE
+        COLOR "#8dd7fe"
+        OUTLINECOLOR "#232323"
+        OUTLINEWIDTH 0.5
+        OPACITY 0
+        LINEJOIN bevel
+      END
+    END
+    CLASS
+      NAME "Doline"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N31")
+      STYLE
+        COLOR "#704e4e"
+      END
+    END
+    CLASS
+      NAME "Rivier-erosielaagte, kolk/wiel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N41")
+      STYLE
+        COLOR "#71e9fe"
+      END
+    END
+    CLASS
+      NAME "Uitblazingskom"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N51")
+      STYLE
+        COLOR "#71a72a"
+      END
+    END
+    CLASS
+      NAME "Zee-erosielaagte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N71")
+      STYLE
+        COLOR "#50d5d5"
+      END
+    END
+    CLASS
+      NAME "Getij-afzettingslaagte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N72")
+      STYLE
+        COLOR "#50c0a7"
+      END
+    END
+    CLASS
+      NAME "Groeve"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N91")
+      STYLE
+        COLOR "#a7a7a7"
+      END
+    END
+    CLASS
+      NAME "Laagte ontstaan door mijnverzakking of -instorting"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N92")
+      STYLE
+        COLOR "#afadad"
+      END
+    END
+    CLASS
+      NAME "Laagte ontstaan door moernering"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N93")
+      STYLE
+        COLOR "#71a7c0"
+      END
+    END
+    CLASS
+      NAME "Laagte ontstaan door afgraving"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N94")
+      STYLE
+        COLOR "#a5a5a5"
+      END
+    END
+    CLASS
+      NAME "Droogdal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R21")
+      STYLE
+        COLOR "#718d71"
+      END
+    END
+    CLASS
+      NAME "Trechtervormig droogdal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R22")
+      STYLE
+        COLOR "#a78d2a"
+      END
+    END
+    CLASS
+      NAME "Dalvormige laagte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R23")
+      STYLE
+        COLOR "#8dc08d"
+      END
+    END
+    CLASS
+      NAME "Rivierdalbodem"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R41")
+      STYLE
+        COLOR "#5c8944"
+      END
+    END
+    CLASS
+      NAME "Beekdalbodem"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R42")
+      STYLE
+        COLOR "#2ac050"
+      END
+    END
+    CLASS
+      NAME "Restgeul"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R43")
+      STYLE
+        COLOR "#50d58d"
+      END
+    END
+    CLASS
+      NAME "Overloop- of crevassegeul"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R44")
+      STYLE
+        COLOR "#50e950"
+      END
+    END
+    CLASS
+      NAME "Kronkelwaardgeul"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R45")
+      STYLE
+        COLOR "#a3ff73"
+      END
+    END
+    CLASS
+      NAME "Beekdalbodem met meanderruggen en geulen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R46")
+      STYLE
+        COLOR "#50c02a"
+      END
+    END
+    CLASS
+      NAME "Rivier- of beekbedding"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R47")
+      STYLE
+        COLOR "#beffff"
+      END
+    END
+    CLASS
+      NAME "Getij-kreekbedding, zee-erosiegeul"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R71")
+      STYLE
+        COLOR "#2ad5c0"
+      END
+    END
+    CLASS
+      NAME "Holle weg"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R91")
+      STYLE
+        COLOR "#4e4e4e"
+      END
+    END
+  END # LAYER
+
+  LAYER
+    STATUS ON
+    NAME "geomorphological_area_gpkg"
+    GROUP "geomorphological_area"
+    STYLEITEM "sld:///srv/data/test.sld"
+    CONNECTIONTYPE OGR
+    CONNECTION "/srv/data/bro-geomorfologischekaart.gpkg"
+    DATA "geomorphological_area"
+    MAXSCALEDENOM 50000
+    TYPE POLYGON
+    PROJECTION
+        "init=epsg:28992"  # Define the source projection to enable reprojection
+    END
+    TEMPLATE VOID
+    METADATA
+      "ows_title"                 ""
+      "wms_abstract"              ""
+      "wms_keywordlist"           "" # At leat one keyword is required M-CR-V01##R.32.R.35
+      "wms_extent"                "-25000 250000 280000 860000"
+      "gml_geometries"            "geom"
+      "wms_featureid"             "puuid"
+      "gml_featureid"             "puuid" # note that this config does not work - this results in a gml_featureid with an autoincrement integer - which is acceptable
+      "gml_include_items"         "all" # required for getfeatureinfo
+      "wms_include_items"         "all" # required for getfeatureinfo
+      "gml_exclude_items"         "puuid"
+      "wms_exclude_items"         "puuid"
+      "wms_authorityurl_name"     "bzk"
+      "wms_authorityurl_href"     "http://www.wur.nl"
+      "wms_identifier_authority"  "bzk"
+      "wms_identifier_value"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=#MD_DataIdentification"
+      "ows_metadataurl_type"      "TC211"
+      "ows_metadataurl_format"    "application/xml"
+      "ows_metadataurl_href"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id="
+      "wms_group_title" "Geomorfologische kaart van nederland (1:50.000)"
+      "wms_group_abstract" "Geomorfologie is de wetenschap die zich bezig houdt met het bestuderen van de vormen van het aardoppervlak en de processen die bij het ontstaan daarvan een rol spelen of hebben gespeeld. De Geomorfologische kaart van Nederland 1:50.000 (2019) beschrijft de in Nederland voorkomende landvormen. De eenheden op de kaart geven informatie over het type vorm, de ontstaanswijze, het reliëf en de ouderdom van de landvormen. Daarnaast wordt, indien relevant, aanvullende informatie (toevoegingen) gegeven over afwijkende geologische afzettingen in de bovengrond, bijzonderheden in het reliëf, of het voorkomen van actieve geomorfologische processen."
+      "wms_group_style_name" "geomorphological_area"
+      "wms_group_style_title" "Geomorfologische kaart van nederland (1:50.000)"
+    END # METADATA
+
+
+  END # LAYER
+
+  LAYER
+    STATUS ON
+    NAME "geomorphological_area_gpkg_gfi"
+    GROUP "geomorphological_area"
+    CONNECTIONTYPE OGR
+    CONNECTION "/srv/data/bro-geomorfologischekaart.gpkg"
+    DATA "geomorphological_area"
+    TYPE POLYGON
+    PROJECTION
+        "init=epsg:28992"  # Define the source projection to enable reprojection
+    END
+    TEMPLATE VOID
+    METADATA
+      "ows_title"                 ""
+      "wms_abstract"              ""
+      "wms_keywordlist"           "" # At leat one keyword is required M-CR-V01##R.32.R.35
+      "wms_extent"                "-25000 250000 280000 860000"
+      "gml_geometries"            "geom"
+      "wms_featureid"             "puuid"
+      "gml_featureid"             "puuid" # note that this config does not work - this results in a gml_featureid with an autoincrement integer - which is acceptable
+      "gml_include_items"         "all" # required for getfeatureinfo
+      "wms_include_items"         "all" # required for getfeatureinfo
+      "gml_exclude_items"         "puuid"
+      "wms_exclude_items"         "puuid"
+      "wms_authorityurl_name"     "bzk"
+      "wms_authorityurl_href"     "http://www.wur.nl"
+      "wms_identifier_authority"  "bzk"
+      "wms_identifier_value"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=#MD_DataIdentification"
+      "ows_metadataurl_type"      "TC211"
+      "ows_metadataurl_format"    "application/xml"
+      "ows_metadataurl_href"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id="
+      "wms_group_title" "Geomorfologische kaart van nederland (1:50.000)"
+      "wms_group_abstract" "Geomorfologie is de wetenschap die zich bezig houdt met het bestuderen van de vormen van het aardoppervlak en de processen die bij het ontstaan daarvan een rol spelen of hebben gespeeld. De Geomorfologische kaart van Nederland 1:50.000 (2019) beschrijft de in Nederland voorkomende landvormen. De eenheden op de kaart geven informatie over het type vorm, de ontstaanswijze, het reliëf en de ouderdom van de landvormen. Daarnaast wordt, indien relevant, aanvullende informatie (toevoegingen) gegeven over afwijkende geologische afzettingen in de bovengrond, bijzonderheden in het reliëf, of het voorkomen van actieve geomorfologische processen."
+      "wms_group_style_name" "geomorphological_area"
+      "wms_group_style_title" "Geomorfologische kaart van nederland (1:50.000)"
+    END # METADATA
+
+        CLASS
+      NAME "Afbraakwand"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "A41")
+      STYLE
+        COLOR "#b55e70"
+      END
+    END
+    CLASS
+      NAME "Ondergraven stuwwalzijde"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "A42")
+      STYLE
+        COLOR "#d50000"
+      END
+    END
+    CLASS
+      NAME "Lösswand"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "A51")
+      STYLE
+        COLOR "#f5977f"
+      END
+    END
+    CLASS
+      NAME "Klif"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "A71")
+      STYLE
+        COLOR "#b3598a"
+      END
+    END
+    CLASS
+      NAME "Stuwwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B11")
+      STYLE
+        COLOR "#fe2a00"
+      END
+    END
+    CLASS
+      NAME "Stuwwal van gestuwde grondmorene"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B12")
+      STYLE
+        COLOR "#fe2a00"
+      END
+    END
+    CLASS
+      NAME "Grondmorenerug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B13")
+      STYLE
+        COLOR "#e64d00"
+      END
+    END
+    CLASS
+      NAME "IJsstroomheuvelrug, 'megaflute'"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B14")
+      STYLE
+        COLOR "#e82a70"
+      END
+    END
+    CLASS
+      NAME "Smeltwaterheuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B15")
+      STYLE
+        COLOR "#d52a71"
+      END
+    END
+    CLASS
+      NAME "Smeltwaterrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B16")
+      STYLE
+        COLOR "#d52a8d"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-heuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B31")
+      STYLE
+        COLOR "#fe2bab"
+      END
+    END
+    CLASS
+      NAME "Terrasafzettingsrest-heuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B41")
+      STYLE
+        COLOR "#c05000"
+      END
+    END
+    CLASS
+      NAME "Terrasrest-heuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B42")
+      STYLE
+        COLOR "#d52afe"
+      END
+    END
+    CLASS
+      NAME "Terrasrest-rug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B43")
+      STYLE
+        COLOR "#71e950"
+      END
+    END
+    CLASS
+      NAME "Stroomrug of stroomgordel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B44")
+      STYLE
+        COLOR "#8dfe2a"
+      END
+    END
+    CLASS
+      NAME "Oeverwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B45")
+      STYLE
+        COLOR "#a7fe00"
+      END
+    END
+    CLASS
+      NAME "Kronkelwaardrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B46")
+      STYLE
+        COLOR "#98e600"
+      END
+    END
+    CLASS
+      NAME "Crevasserug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B47")
+      STYLE
+        COLOR "#a5f57a"
+      END
+    END
+    CLASS
+      NAME "Lössrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B51")
+      STYLE
+        COLOR "#ea6e00"
+      END
+    END
+    CLASS
+      NAME "Dekzandkopje"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B52")
+      STYLE
+        COLOR "#d5c050"
+      END
+    END
+    CLASS
+      NAME "Dekzandrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B53")
+      STYLE
+        COLOR "#d5d52a"
+      END
+    END
+    CLASS
+      NAME "Dekzandwelving"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B54")
+      STYLE
+        COLOR "#e9c08d"
+      END
+    END
+    CLASS
+      NAME "Geulranddekzandrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B55")
+      STYLE
+        COLOR "#c0d550"
+      END
+    END
+    CLASS
+      NAME "Gordeldekzandrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B56")
+      STYLE
+        COLOR "#c0d550"
+      END
+    END
+    CLASS
+      NAME "Rivierduin"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B57")
+      STYLE
+        COLOR "#ffff73"
+      END
+    END
+    CLASS
+      NAME "Landduin"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B58")
+      STYLE
+        COLOR "#fee900"
+      END
+    END
+    CLASS
+      NAME "Stuifdijk"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B59")
+      STYLE
+        COLOR "#fefe00"
+      END
+    END
+    CLASS
+      NAME "Meerwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B61")
+      STYLE
+        COLOR "#d5e950"
+      END
+    END
+    CLASS
+      NAME "Getij-inversierug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B71")
+      STYLE
+        COLOR "#50fe8d"
+      END
+    END
+    CLASS
+      NAME "Getij-oeverwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B72")
+      STYLE
+        COLOR "#50fea7"
+      END
+    END
+    CLASS
+      NAME "Getij-riviermondrug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B73")
+      STYLE
+        COLOR "#8dfe71"
+      END
+    END
+    CLASS
+      NAME "Kustwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B74")
+      STYLE
+        COLOR "#d5e971"
+      END
+    END
+    CLASS
+      NAME "Kwelderwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B75")
+      STYLE
+        COLOR "#71e9a7"
+      END
+    END
+    CLASS
+      NAME "Strandwal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B76")
+      STYLE
+        COLOR "#e9e971"
+      END
+    END
+    CLASS
+      NAME "Strandwalrest-dijk"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B77")
+      STYLE
+        COLOR "#e9d571"
+      END
+    END
+    CLASS
+      NAME "Veenrest-dijk"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B81")
+      STYLE
+        COLOR "#a750e9"
+      END
+    END
+    CLASS
+      NAME "Veenrest-heuvel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B82")
+      STYLE
+        COLOR "#c0a7fe"
+      END
+    END
+    CLASS
+      NAME "Terp (wierd) of hoogwatervluchtplaats"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B91")
+      STYLE
+        COLOR "#fe0000"
+      END
+    END
+    CLASS
+      NAME "Storthoop"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "B92")
+      STYLE
+        COLOR "#d52cae"
+      END
+    END
+    CLASS
+      NAME "Stuwwalplateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "D11")
+      STYLE
+        COLOR "#fe5050"
+      END
+    END
+    CLASS
+      NAME "Schiervlakterest-plateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "D31")
+      STYLE
+        COLOR "#d550d5"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-plateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "D32")
+      STYLE
+        COLOR "#ea73ad"
+      END
+    END
+    CLASS
+      NAME "Terrasrest-plateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "D41")
+      STYLE
+        COLOR "#a251d5"
+      END
+    END
+    CLASS
+      NAME "Breuktrap in terrasafzettingsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E01")
+      STYLE
+        COLOR "#c08d71"
+      END
+    END
+    CLASS
+      NAME "Smeltwaterterras, 'Kame'"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E11")
+      STYLE
+        COLOR "#fe8d8d"
+      END
+    END
+    CLASS
+      NAME "Daluitspoelingsrest-terras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E21")
+      STYLE
+        COLOR "#d5a072"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-terras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E31")
+      STYLE
+        COLOR "#fdb791"
+      END
+    END
+    CLASS
+      NAME "Lithologisch bepaalde terrasvorm"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E32")
+      STYLE
+        COLOR "#c08d8d"
+      END
+    END
+    CLASS
+      NAME "Plateauterras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E41")
+      STYLE
+        COLOR "#a771c0"
+      END
+    END
+    CLASS
+      NAME "Tussenterras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E42")
+      STYLE
+        COLOR "#a7a651"
+      END
+    END
+    CLASS
+      NAME "Dalwandterras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E43")
+      STYLE
+        COLOR "#a78c72"
+      END
+    END
+    CLASS
+      NAME "Dalvlakteterras"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "E44")
+      STYLE
+        COLOR "#a7d52a"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige horst"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F01")
+      STYLE
+        COLOR "#d5c071"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige grondmorenerug"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F11")
+      STYLE
+        COLOR "#ffa187"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige smeltwaterterrasrest"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F12")
+      STYLE
+        COLOR "#b89a76"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige vereffeningsrest"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F31")
+      STYLE
+        COLOR "#e98dc0"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige terrasrest"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F41")
+      STYLE
+        COLOR "#8dd500"
+      END
+    END
+    CLASS
+      NAME "Dekzandplateau"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F51")
+      STYLE
+        COLOR "#d5c02a"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige getij-afzetting"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F71")
+      STYLE
+        COLOR "#e9a7c0"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige veenrest"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F81")
+      STYLE
+        COLOR "#c08dfe"
+      END
+    END
+    CLASS
+      NAME "Plateau-achtige storthoop, opgehoogd of opgespoten terrein, of kunstmatig eiland"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "F91")
+      STYLE
+        COLOR "#e971c0"
+      END
+    END
+    CLASS
+      NAME "Smeltwaterwaaier, Sandr"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "G11")
+      STYLE
+        COLOR "#fe8dc0"
+      END
+    END
+    CLASS
+      NAME "Daluitspoelingswaaier"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "G21")
+      STYLE
+        COLOR "#d58d54"
+      END
+    END
+    CLASS
+      NAME "Doorbraakwaaier"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "G41")
+      STYLE
+        COLOR "#8dc071"
+      END
+    END
+    CLASS
+      NAME "Horstglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H01")
+      STYLE
+        COLOR "#d58d71"
+      END
+    END
+    CLASS
+      NAME "Stuwwalglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H11")
+      STYLE
+        COLOR "#fe9c50"
+      END
+    END
+    CLASS
+      NAME "Grondmoreneglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H12")
+      STYLE
+        COLOR "#fe8d50"
+      END
+    END
+    CLASS
+      NAME "Grondmoreneglooiing of smeltwaterglooiing met resten van grondmorene"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H13")
+      STYLE
+        COLOR "#e98d8d"
+      END
+    END
+    CLASS
+      NAME "Glooiing van sneeuwsmeltwaterafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H21")
+      STYLE
+        COLOR "#c0a750"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrestglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H31")
+      STYLE
+        COLOR "#fe71d5"
+      END
+    END
+    CLASS
+      NAME "Glooiing van hellingafspoelingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H32")
+      STYLE
+        COLOR "#c18d2b"
+      END
+    END
+    CLASS
+      NAME "Lössglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H33")
+      STYLE
+        COLOR "#c14d00"
+      END
+    END
+    CLASS
+      NAME "Glooiing in terrasafzettingsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H41")
+      STYLE
+        COLOR "#a7a771"
+      END
+    END
+    CLASS
+      NAME "Glooiing van beekdalzijde"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H42")
+      STYLE
+        COLOR "#8dc050"
+      END
+    END
+    CLASS
+      NAME "Stroomrugglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H43")
+      STYLE
+        COLOR "#b0ed7a"
+      END
+    END
+    CLASS
+      NAME "Rivierstrandglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H44")
+      STYLE
+        COLOR "#fee971"
+      END
+    END
+    CLASS
+      NAME "Gordeldekzandglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H51")
+      STYLE
+        COLOR "#fed550"
+      END
+    END
+    CLASS
+      NAME "Kustduinglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H52")
+      STYLE
+        COLOR "#d5e971"
+      END
+    END
+    CLASS
+      NAME "Veenrestglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H61")
+      STYLE
+        COLOR "#a7a7fe"
+      END
+    END
+    CLASS
+      NAME "Zeestrandglooiing"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "H71")
+      STYLE
+        COLOR "#fee971"
+      END
+    END
+    CLASS
+      NAME "Grondmorenewelvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L11")
+      STYLE
+        COLOR "#fec071"
+      END
+    END
+    CLASS
+      NAME "Welvingen in sneeuwsmeltwaterafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L21")
+      STYLE
+        COLOR "#c0c08d"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-welvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L31")
+      STYLE
+        COLOR "#c07099"
+      END
+    END
+    CLASS
+      NAME "Terrasafzettingswelvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L41")
+      STYLE
+        COLOR "#c0fec0"
+      END
+    END
+    CLASS
+      NAME "Meanderruggen en -geulen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L42")
+      STYLE
+        COLOR "#a7e900"
+      END
+    END
+    CLASS
+      NAME "Welvingen in rivierafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L43")
+      STYLE
+        COLOR "#a7fe50"
+      END
+    END
+    CLASS
+      NAME "Dekzandwelvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L51")
+      STYLE
+        COLOR "#c0c02a"
+      END
+    END
+    CLASS
+      NAME "Gordeldekzandwelvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L52")
+      STYLE
+        COLOR "#e9d571"
+      END
+    END
+    CLASS
+      NAME "Kustduinen met bijbehorende vlakten en laagten"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L53")
+      STYLE
+        COLOR "#fec000"
+      END
+    END
+    CLASS
+      NAME "Landduinen met bijbehorende vlakten en laagten"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L54")
+      STYLE
+        COLOR "#ffff38"
+      END
+    END
+    CLASS
+      NAME "Welvingen in zee- of meerbodemafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L61")
+      STYLE
+        COLOR "#9cd99d"
+      END
+    END
+    CLASS
+      NAME "Binnendelta-welvingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L71")
+      STYLE
+        COLOR "#c0fec0"
+      END
+    END
+    CLASS
+      NAME "Welvingen in plaatselijk gemoerde getij-afzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L72")
+      STYLE
+        COLOR "#a7fec0"
+      END
+    END
+    CLASS
+      NAME "Welvingen in kustoverslagafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L73")
+      STYLE
+        COLOR "#a7fed5"
+      END
+    END
+    CLASS
+      NAME "Welvingen in getij-afzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L74")
+      STYLE
+        COLOR "#71fec0"
+      END
+    END
+    CLASS
+      NAME "Welvingen in getij-aanwassen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L75")
+      STYLE
+        COLOR "#8dfed5"
+      END
+    END
+    CLASS
+      NAME "Welvingen in zandplaten"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L76")
+      STYLE
+        COLOR "#fefe8d"
+      END
+    END
+    CLASS
+      NAME "Veenrest-ruggen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L81")
+      STYLE
+        COLOR "#c0a7e9"
+      END
+    END
+    CLASS
+      NAME "Storthopen met grind-, zand-, kleigaten of ijzerkuilen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L91")
+      STYLE
+        COLOR "#fe8dfe"
+      END
+    END
+    CLASS
+      NAME "Kunstmatig gecreëerd reliëf voor recreatiedoeleinden zoals golfbanen, motorsportterreinen en parken"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "L92")
+      STYLE
+        COLOR "#787878"
+      END
+    END
+    CLASS
+      NAME "Vlakte van grondmorene"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M11")
+      STYLE
+        COLOR "#fed5a7"
+      END
+    END
+    CLASS
+      NAME "Vlakte van smeltwaterafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M12")
+      STYLE
+        COLOR "#fec0c0"
+      END
+    END
+    CLASS
+      NAME "Vlakte van sneeuwsmeltwaterafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M21")
+      STYLE
+        COLOR "#d5c0a7"
+      END
+    END
+    CLASS
+      NAME "Vereffeningsrest-vlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M31")
+      STYLE
+        COLOR "#fea7d5"
+      END
+    END
+    CLASS
+      NAME "Terrasafzettingsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M41")
+      STYLE
+        COLOR "#9eca7f"
+      END
+    END
+    CLASS
+      NAME "Terrasvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M42")
+      STYLE
+        COLOR "#8dd571"
+      END
+    END
+    CLASS
+      NAME "Binnendelta-vlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M43")
+      STYLE
+        COLOR "#e2fec0"
+      END
+    END
+    CLASS
+      NAME "Beekoverstromingsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M44")
+      STYLE
+        COLOR "#71d571"
+      END
+    END
+    CLASS
+      NAME "Vlakte van rivierafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M45")
+      STYLE
+        COLOR "#8dfea7"
+      END
+    END
+    CLASS
+      NAME "Rivierkomvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M46")
+      STYLE
+        COLOR "#71fea7"
+      END
+    END
+    CLASS
+      NAME "Vlakte van fluviatiele doorbraakafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M47")
+      STYLE
+        COLOR "#c0e9c0"
+      END
+    END
+    CLASS
+      NAME "Rivierkom- en oeverwalachtige vlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M48")
+      STYLE
+        COLOR "#8dfe8d"
+      END
+    END
+    CLASS
+      NAME "Dekzandvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M51")
+      STYLE
+        COLOR "#e9e9a7"
+      END
+    END
+    CLASS
+      NAME "Gordeldekzandvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M52")
+      STYLE
+        COLOR "#e9d58d"
+      END
+    END
+    CLASS
+      NAME "Vlakte van ten dele verspoelde dekzanden of löss"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M53")
+      STYLE
+        COLOR "#e0e5ab"
+      END
+    END
+    CLASS
+      NAME "Stuifzandvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M54")
+      STYLE
+        COLOR "#fef8a4"
+      END
+    END
+    CLASS
+      NAME "Vlakte van meeropvulling"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M61")
+      STYLE
+        COLOR "#c0fe8d"
+      END
+    END
+    CLASS
+      NAME "Vlakte van zee-of meerbodemafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M62")
+      STYLE
+        COLOR "#71e9d5"
+      END
+    END
+    CLASS
+      NAME "Vlakte van plaatselijk gemoerde getij-afzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M71")
+      STYLE
+        COLOR "#a7c0c0"
+      END
+    END
+    CLASS
+      NAME "Vlakte van getij-afzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M72")
+      STYLE
+        COLOR "#71d5c0"
+      END
+    END
+    CLASS
+      NAME "Vlakte van getij-riviermondafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M73")
+      STYLE
+        COLOR "#8dfec0"
+      END
+    END
+    CLASS
+      NAME "Vlakte van mariene doorbraakafzettingen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M74")
+      STYLE
+        COLOR "#a1e9c0"
+      END
+    END
+    CLASS
+      NAME "Zeeboezemvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M75")
+      STYLE
+        COLOR "#00d0db"
+      END
+    END
+    CLASS
+      NAME "Ingesloten strandvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M76")
+      STYLE
+        COLOR "#e9e9c0"
+      END
+    END
+    CLASS
+      NAME "Abrasievlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M77")
+      STYLE
+        COLOR "#e9c0e9"
+      END
+    END
+    CLASS
+      NAME "Strandvlakte, zandplaat of slik"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M78")
+      STYLE
+        COLOR "#fefed5"
+      END
+    END
+    CLASS
+      NAME "Aanwasvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M79")
+      STYLE
+        COLOR "#8de9e9"
+      END
+    END
+    CLASS
+      NAME "Ontgonnen veenvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M81")
+      STYLE
+        COLOR "#a7c0fe"
+      END
+    END
+    CLASS
+      NAME "Ontgonnen veenvlakte met petgaten"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M82")
+      STYLE
+        COLOR "#8dd5fe"
+      END
+    END
+    CLASS
+      NAME "Veenrestvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M83")
+      STYLE
+        COLOR "#d5c0fe"
+      END
+    END
+    CLASS
+      NAME "Boezemland, vlietland, moerassige vlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M84")
+      STYLE
+        COLOR "#8dd5e9"
+      END
+    END
+    CLASS
+      NAME "Veenkoloniale ontginningsvlakte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M91")
+      STYLE
+        COLOR "#d5c0c0"
+      END
+    END
+    CLASS
+      NAME "Vlakte ontstaan door afgraving en/of egalisatie van duinen of strandwallen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M92")
+      STYLE
+        COLOR "#e9e92a"
+      END
+    END
+    CLASS
+      NAME "Vlakte ontstaan door afgraving en/of egalisatie"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "M93")
+      STYLE
+        COLOR "#c0c0c0"
+      END
+    END
+    CLASS
+      NAME "Doodijsgat"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N11")
+      STYLE
+        COLOR "#770081"
+      END
+    END
+    CLASS
+      NAME "Pingoruïnes"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N21")
+      STYLE
+        COLOR "#8da7fe"
+      END
+    END
+    CLASS
+      NAME "Periglaciale laagte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N22")
+      STYLE
+        COLOR "#8dd7fe"
+        OUTLINECOLOR "#232323"
+        OUTLINEWIDTH 0.5
+        OPACITY 0
+        LINEJOIN bevel
+      END
+    END
+    CLASS
+      NAME "Doline"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N31")
+      STYLE
+        COLOR "#704e4e"
+      END
+    END
+    CLASS
+      NAME "Rivier-erosielaagte, kolk/wiel"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N41")
+      STYLE
+        COLOR "#71e9fe"
+      END
+    END
+    CLASS
+      NAME "Uitblazingskom"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N51")
+      STYLE
+        COLOR "#71a72a"
+      END
+    END
+    CLASS
+      NAME "Zee-erosielaagte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N71")
+      STYLE
+        COLOR "#50d5d5"
+      END
+    END
+    CLASS
+      NAME "Getij-afzettingslaagte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N72")
+      STYLE
+        COLOR "#50c0a7"
+      END
+    END
+    CLASS
+      NAME "Groeve"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N91")
+      STYLE
+        COLOR "#a7a7a7"
+      END
+    END
+    CLASS
+      NAME "Laagte ontstaan door mijnverzakking of -instorting"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N92")
+      STYLE
+        COLOR "#afadad"
+      END
+    END
+    CLASS
+      NAME "Laagte ontstaan door moernering"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N93")
+      STYLE
+        COLOR "#71a7c0"
+      END
+    END
+    CLASS
+      NAME "Laagte ontstaan door afgraving"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "N94")
+      STYLE
+        COLOR "#a5a5a5"
+      END
+    END
+    CLASS
+      NAME "Droogdal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R21")
+      STYLE
+        COLOR "#718d71"
+      END
+    END
+    CLASS
+      NAME "Trechtervormig droogdal"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R22")
+      STYLE
+        COLOR "#a78d2a"
+      END
+    END
+    CLASS
+      NAME "Dalvormige laagte"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R23")
+      STYLE
+        COLOR "#8dc08d"
+      END
+    END
+    CLASS
+      NAME "Rivierdalbodem"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R41")
+      STYLE
+        COLOR "#5c8944"
+      END
+    END
+    CLASS
+      NAME "Beekdalbodem"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R42")
+      STYLE
+        COLOR "#2ac050"
+      END
+    END
+    CLASS
+      NAME "Restgeul"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R43")
+      STYLE
+        COLOR "#50d58d"
+      END
+    END
+    CLASS
+      NAME "Overloop- of crevassegeul"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R44")
+      STYLE
+        COLOR "#50e950"
+      END
+    END
+    CLASS
+      NAME "Kronkelwaardgeul"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R45")
+      STYLE
+        COLOR "#a3ff73"
+      END
+    END
+    CLASS
+      NAME "Beekdalbodem met meanderruggen en geulen"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R46")
+      STYLE
+        COLOR "#50c02a"
+      END
+    END
+    CLASS
+      NAME "Rivier- of beekbedding"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R47")
+      STYLE
+        COLOR "#beffff"
+      END
+    END
+    CLASS
+      NAME "Getij-kreekbedding, zee-erosiegeul"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R71")
+      STYLE
+        COLOR "#2ad5c0"
+      END
+    END
+    CLASS
+      NAME "Holle weg"
+      GROUP "geomorphological_area"
+      EXPRESSION ("[landform_subgroup_code]" == "R91")
+      STYLE
+        COLOR "#4e4e4e"
+      END
+    END
+  END # LAYER
+
+  LAYER
+    STATUS ON
+    NAME "area_of_geomorphological_interest"
+    CONNECTIONTYPE OGR
+    CONNECTION "/srv/data/bro-geomorfologischekaart.gpkg"
+    DATA "area_of_geomorphological_interest"
+    TYPE POLYGON
+    PROJECTION
+        "init=epsg:28992"  # Define the source projection to enable reprojection
+    END
+    TEMPLATE VOID
+    METADATA
+      "ows_title"                 "Gebieden van geomorfologisch belang"
+      "wms_abstract"              "Gebieden van geomorfologisch belang is een samenvoeging van de lagen dijken en wateren van geomorfologisch belang."
+      "wms_keywordlist"           "geomorfologie,landvorm,landschap,dijk,waterkering,erfgoed" # At leat one keyword is required M-CR-V01##R.32.R.35
+      "wms_extent"                "-25000 250000 280000 860000"
+      "gml_geometries"            "geom"
+      "wms_featureid"             "puuid"
+      "gml_featureid"             "puuid" # note that this config does not work - this results in a gml_featureid with an autoincrement integer - which is acceptable
+      "gml_include_items"         "all" # required for getfeatureinfo
+      "wms_include_items"         "all" # required for getfeatureinfo
+      "gml_exclude_items"         "puuid"
+      "wms_exclude_items"         "puuid"
+      "wms_authorityurl_name"     "bzk"
+      "wms_authorityurl_href"     "http://www.wur.nl"
+      "wms_identifier_authority"  "bzk"
+      "wms_identifier_value"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=459231d0-7379-4f26-a444-7616e1d888f0#MD_DataIdentification"
+      "ows_metadataurl_type"      "TC211"
+      "ows_metadataurl_format"    "application/xml"
+      "ows_metadataurl_href"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=459231d0-7379-4f26-a444-7616e1d888f0"
+      "wms_style_geomorphological_interest_title" "Dijken en Water"
+      "wms_style_view_dike_of_geomorphological_interest_title" "Dijk"
+      "wms_style_view_water_of_geomorphological_interest_title" "Water"
+    END # METADATA
+
+        CLASS
+      NAME "Dijk"
+      GROUP "geomorphological_interest"
+      EXPRESSION ("[Type]" == "Dijk")
+      STYLE
+        COLOR "#fe02a7"
+      END
+    END
+    CLASS
+      NAME "Water"
+      GROUP "geomorphological_interest"
+      EXPRESSION ("[Type]" == "Water")
+      STYLE
+        COLOR "#d3fefe"
+      END
+    END    CLASS
+      NAME "Dijk"
+      GROUP "view_dike_of_geomorphological_interest"
+      EXPRESSION ("[Type]" == "Dijk")
+      STYLE
+        COLOR "#fe02a7"
+      END
+    END    CLASS
+      NAME "Water"
+      GROUP "view_water_of_geomorphological_interest"
+      EXPRESSION ("[Type]" == "Water")
+      STYLE
+        COLOR "#d3fefe"
+      END
+    END
+   
+    CLASSGROUP "geomorphological_interest"
+  END # LAYER
+
+  LAYER
+    STATUS ON
+    NAME "geomorphological_area_collection"
+    CONNECTIONTYPE OGR
+    CONNECTION "/srv/data/bro-geomorfologischekaart.gpkg"
+    DATA "geomorphological_area_collection"
+    TYPE POLYGON
+    PROJECTION
+        "init=epsg:28992"  # Define the source projection to enable reprojection
+    END
+    TEMPLATE VOID
+    METADATA
+      "ows_title"                 "Collecties Geomorfologische Kaart"
+      "wms_abstract"              "Collecties zijn verzamelingen kaartvlakken die bij één update van de kaart horen met achtergrondinformatie over de gebruikte methode en wanneer de actualisatie heeft plaats gevonden."
+      "wms_keywordlist"           "geomorfologie,landvorm,landschap,dijk,waterkering,erfgoed" # At leat one keyword is required M-CR-V01##R.32.R.35
+      "wms_extent"                "-25000 250000 280000 860000"
+      "gml_geometries"            "geom"
+      "wms_featureid"             "puuid"
+      "gml_featureid"             "puuid" # note that this config does not work - this results in a gml_featureid with an autoincrement integer - which is acceptable
+      "gml_include_items"         "all" # required for getfeatureinfo
+      "wms_include_items"         "all" # required for getfeatureinfo
+      "gml_exclude_items"         "puuid"
+      "wms_exclude_items"         "puuid"
+      "wms_authorityurl_name"     "bzk"
+      "wms_authorityurl_href"     "http://www.wur.nl"
+      "wms_identifier_authority"  "bzk"
+      "wms_identifier_value"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=459231d0-7379-4f26-a444-7616e1d888f0#MD_DataIdentification"
+      "ows_metadataurl_type"      "TC211"
+      "ows_metadataurl_format"    "application/xml"
+      "ows_metadataurl_href"      "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id=459231d0-7379-4f26-a444-7616e1d888f0"
+      "wms_style_geomorphological_area_collection_title" "Geomorphological area collection"
+    END # METADATA
+
+        CLASS
+      NAME "Collecties Geomorfologische Kaart"
+      GROUP "geomorphological_area_collection"
+      STYLE
+        COLOR "#edb83b"
+        OPACITY 30
+      END
+    END
+  END # LAYER
+
+  
+END # MAP
