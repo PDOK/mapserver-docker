@@ -81,10 +81,20 @@ RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
     cmake --build . && \
     cmake --build . --target install
 
-ENV MAPSERVER_VERSION="8.4.1"
+
+ENV MAPSERVER_VERSION="pdok-8-4-1-patch-1"
 RUN mkdir /usr/local/src/mapserver
-RUN wget https://github.com/MapServer/MapServer/releases/download/rel-$(echo $MAPSERVER_VERSION | sed -e "s/\./-/g")/mapserver-${MAPSERVER_VERSION}.tar.gz
-RUN tar -xf mapserver-8.*.tar.gz --strip-components 1  -C /usr/local/src/mapserver
+
+# For now we run our own patch version
+RUN wget -O mapserver.tar.gz \
+    https://github.com/PDOK/mapserver/archive/refs/tags/${MAPSERVER_VERSION}.tar.gz
+
+RUN tar -xzf mapserver.tar.gz --strip-components=1 -C /usr/local/src/mapserver
+
+# Use this when we want to build from the official MapServer release
+# RUN wget https://github.com/MapServer/MapServer/releases/download/rel-$(echo $MAPSERVER_VERSION | sed -e "s/\./-/g")/mapserver-${MAPSERVER_VERSION}.tar.gz
+# RUN tar -xf mapserver-8.*.tar.gz --strip-components 1  -C /usr/local/src/mapserver
+
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
     cmake ../ \
