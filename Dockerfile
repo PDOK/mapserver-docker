@@ -66,7 +66,7 @@ RUN wget https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSIO
     tar xJf harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
     cd harfbuzz-$HARFBUZZ_VERSION && \
     ./configure && \
-    make && \
+    make -j$(nproc) && \
     make install && \
     ldconfig
 
@@ -88,9 +88,10 @@ RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=OFF \
+        -DBUILD_APPS=OFF \
         -DGDAL_USE_SPATIALITE=ON\
         && \
-    cmake --build . && \
+    cmake --build . --parallel $(nproc) && \
     cmake --build . --target install
 
 ENV MAPSERVER_VERSION="8.6.6"
@@ -152,7 +153,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_GENERIC_NINT=OFF \
         -DWITH_PROTOBUFC=ON \
         && \
-    make && \
+    make -j$(nproc) && \
     make install && \
     ldconfig
 
