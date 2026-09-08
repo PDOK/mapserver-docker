@@ -55,6 +55,7 @@ RUN SQLITE_DL_VERSION=$(printf '%d%02d%02d00' $(echo "${SQLITE_VERSION}" | tr '.
     tar xzvf sqlite-autoconf-${SQLITE_DL_VERSION}.tar.gz && \
     cd sqlite-autoconf-${SQLITE_DL_VERSION} && \
     CFLAGS="-DSQLITE_ENABLE_RTREE=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_JSON1=1 -DSQLITE_ENABLE_FTS5=1 -DSQLITE_ENABLE_LOAD_EXTENSION=1" \
+    LDFLAGS="-Wl,-soname,libsqlite3.so.0" \
     ./configure --prefix=/usr/local --disable-static && \
     make && \
     make install && \
@@ -205,6 +206,7 @@ COPY --from=builder  /usr/local/share/proj/ /usr/local/share/proj/
 COPY --from=builder /usr/include/ /usr/include/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /usr/local/lib/ /usr/local/lib/
+RUN ldconfig
 RUN chmod o+x /usr/local/bin/mapserv
 
 ADD config/lighttpd.conf /srv/mapserver/config/lighttpd.conf
