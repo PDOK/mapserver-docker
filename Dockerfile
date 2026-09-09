@@ -21,7 +21,6 @@ RUN apt-get update -y --fix-missing && \
         libgif-dev \
         libglib2.0-dev \
         libcairo2-dev \
-        sqlite3 \
         libjpeg-dev \
         libpng-dev \
         libpq-dev \
@@ -30,7 +29,6 @@ RUN apt-get update -y --fix-missing && \
         libprotobuf-dev \
         libprotobuf32 \
         librsvg2-dev \
-        libsqlite3-dev \
         libspatialite-dev \
         libtiff5-dev \
         libxslt1-dev \
@@ -48,20 +46,34 @@ RUN apt-get update -y --fix-missing && \
 
 RUN update-locale LANG=C.UTF-8
 
+WORKDIR /tmp
+
+# SQLite's version-number convention is MAJOR*1000000 + MINOR*10000 + PATCH*100
+ENV SQLITE_VERSION="3.53.4"
+RUN SQLITE_DL_VERSION=$(printf '%d%02d%02d00' $(echo "${SQLITE_VERSION}" | tr '.' ' ')) && \
+    wget https://www.sqlite.org/$(date +%Y)/sqlite-autoconf-${SQLITE_DL_VERSION}.tar.gz && \
+    tar xzvf sqlite-autoconf-${SQLITE_DL_VERSION}.tar.gz && \
+    cd sqlite-autoconf-${SQLITE_DL_VERSION} && \
+    CFLAGS="-DSQLITE_ENABLE_RTREE=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_JSON1=1 -DSQLITE_ENABLE_FTS5=1 -DSQLITE_ENABLE_LOAD_EXTENSION=1" \
+    LDFLAGS="-Wl,-soname,libsqlite3.so.0" \
+    ./configure --prefix=/usr/local --disable-static && \
+    make && \
+    make install && \
+    ldconfig
+
 ENV HARFBUZZ_VERSION="7.3.0"
-RUN cd /tmp && \
-        wget https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION/harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
-        tar xJf harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
-        cd harfbuzz-$HARFBUZZ_VERSION && \
-        ./configure && \
-        make && \
-        make install && \
-        ldconfig
+RUN wget https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION/harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
+    tar xJf harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
+    cd harfbuzz-$HARFBUZZ_VERSION && \
+    ./configure && \
+    make -j$(nproc) && \
+    make install && \
+    ldconfig
 
 ENV PROJ_VERSION="9.3.1"
 RUN wget https://github.com/OSGeo/PROJ/releases/download/${PROJ_VERSION}/proj-${PROJ_VERSION}.tar.gz
 RUN tar xzvf proj-${PROJ_VERSION}.tar.gz && \
-    cd /proj-${PROJ_VERSION} && \
+    cd proj-${PROJ_VERSION} && \
     mkdir build && \
     cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && make -j$(nproc) && make install
@@ -69,31 +81,29 @@ RUN tar xzvf proj-${PROJ_VERSION}.tar.gz && \
 ENV GDAL_VERSION="3.9.2"
 RUN wget https://github.com/OSGeo/gdal/releases/download/v${GDAL_VERSION}/gdal-${GDAL_VERSION}.tar.gz
 RUN tar xzvf gdal-${GDAL_VERSION}.tar.gz && \
-    cd /gdal-${GDAL_VERSION} && \
+    cd gdal-${GDAL_VERSION} && \
     mkdir build && \
     cd build && \
     cmake .. \
         -DCMAKE_INSTALL_PREFIX=/usr/local \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=OFF \
+        -DBUILD_APPS=OFF \
         -DGDAL_USE_SPATIALITE=ON\
         && \
-    cmake --build . && \
+    cmake --build . --parallel $(nproc) && \
     cmake --build . --target install
 
-
-ENV MAPSERVER_VERSION="pdok-8-4-1-patch-1"
+ENV MAPSERVER_VERSION="8.6.6"
 RUN mkdir /usr/local/src/mapserver
 
-# For now we run our own patch version
-RUN wget -O mapserver.tar.gz \
-    https://github.com/PDOK/mapserver/archive/refs/tags/${MAPSERVER_VERSION}.tar.gz
-
-RUN tar -xzf mapserver.tar.gz --strip-components=1 -C /usr/local/src/mapserver
+# Use this when we want to run our own patch version
+# RUN wget -O mapserver.tar.gz https://github.com/PDOK/mapserver/archive/refs/tags/${MAPSERVER_VERSION}.tar.gz
+# RUN tar -xzf mapserver.tar.gz --strip-components=1 -C /usr/local/src/mapserver
 
 # Use this when we want to build from the official MapServer release
-# RUN wget https://github.com/MapServer/MapServer/releases/download/rel-$(echo $MAPSERVER_VERSION | sed -e "s/\./-/g")/mapserver-${MAPSERVER_VERSION}.tar.gz
-# RUN tar -xf mapserver-8.*.tar.gz --strip-components 1  -C /usr/local/src/mapserver
+RUN wget https://github.com/MapServer/MapServer/releases/download/rel-$(echo $MAPSERVER_VERSION | sed -e "s/\./-/g")/mapserver-${MAPSERVER_VERSION}.tar.gz
+RUN tar -xf mapserver-8.*.tar.gz --strip-components 1  -C /usr/local/src/mapserver
 
 RUN mkdir /usr/local/src/mapserver/build && \
     cd /usr/local/src/mapserver/build && \
@@ -143,7 +153,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
         -DWITH_GENERIC_NINT=OFF \
         -DWITH_PROTOBUFC=ON \
         && \
-    make && \
+    make -j$(nproc) && \
     make install && \
     ldconfig
 
@@ -197,6 +207,7 @@ COPY --from=builder  /usr/local/share/proj/ /usr/local/share/proj/
 COPY --from=builder /usr/include/ /usr/include/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /usr/local/lib/ /usr/local/lib/
+RUN ldconfig
 RUN chmod o+x /usr/local/bin/mapserv
 
 ADD config/lighttpd.conf /srv/mapserver/config/lighttpd.conf
