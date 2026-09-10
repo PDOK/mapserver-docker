@@ -48,16 +48,14 @@ RUN update-locale LANG=C.UTF-8
 
 WORKDIR /tmp
 
-# SQLite's version-number convention is MAJOR*1000000 + MINOR*10000 + PATCH*100
 ENV SQLITE_VERSION="3.53.4"
-RUN SQLITE_DL_VERSION=$(printf '%d%02d%02d00' $(echo "${SQLITE_VERSION}" | tr '.' ' ')) && \
-    wget https://www.sqlite.org/$(date +%Y)/sqlite-autoconf-${SQLITE_DL_VERSION}.tar.gz && \
-    tar xzvf sqlite-autoconf-${SQLITE_DL_VERSION}.tar.gz && \
-    cd sqlite-autoconf-${SQLITE_DL_VERSION} && \
+RUN wget https://github.com/sqlite/sqlite/archive/refs/tags/version-${SQLITE_VERSION}.tar.gz && \
+    tar xzvf version-${SQLITE_VERSION}.tar.gz && \
+    cd sqlite-version-${SQLITE_VERSION} && \
     CFLAGS="-DSQLITE_ENABLE_RTREE=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_JSON1=1 -DSQLITE_ENABLE_FTS5=1 -DSQLITE_ENABLE_LOAD_EXTENSION=1" \
     LDFLAGS="-Wl,-soname,libsqlite3.so.0" \
-    ./configure --prefix=/usr/local --disable-static && \
-    make && \
+    ./configure --prefix=/usr/local --disable-static --disable-tcl && \
+    make -j$(nproc) && \
     make install && \
     ldconfig
 
