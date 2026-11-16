@@ -24,14 +24,14 @@ docker build -t pdok/mapserver .
 
 ```shell
 docker run -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WMS --rm -d \
-            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver
+            -p 80:80 --name mapserver-example -v "$PWD/example:/srv/data" pdok/mapserver
 ```
 
 ### docker run wfs
 
 ```shell
 docker run -e MAPSERVER_CONFIG_FILE=/srv/data/example.conf -e MS_MAPFILE=/srv/data/example.map -e SERVICE_TYPE=WFS  --rm -d \
-            -p 80:80 --name mapserver-example -v `pwd`/example:/srv/data pdok/mapserver 
+            -p 80:80 --name mapserver-example -v "$PWD/example:/srv/data" pdok/mapserver 
 ```
 
 ### docker stop
@@ -113,7 +113,7 @@ docker run \
    -e MS_MAPFILE=/srv/data/example.map \
    -p 80:80 \
    --name mapserver-example \
-   -v `pwd`/example:/srv/data \
+   -v "$PWD/example:/srv/data" \
    pdok/mapserver
 ```
 
@@ -145,7 +145,7 @@ docker run \
    --rm -d \
    -p 80:80 \
    --name mapserver-run-example \
-   -v `pwd`/example:/srv/data \
+   -v "$PWD/example:/srv/data" \
    -e DEBUG=0 \
    -e MIN_PROCS=1 \
    -e MAX_PROCS=3 \
@@ -180,7 +180,7 @@ adding the following parameters to the docker command:
 
 ```sh
 -e PROJ_LIB=/my-custom-proj-dir \
--v `pwd`/path/to/proj/dir:/my-custom-proj-dir \
+-v "$PWD/path/to/proj/dir:/my-custom-proj-dir" \
 ```
 
 ## Example

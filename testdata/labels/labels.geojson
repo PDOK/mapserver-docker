@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"name": "labels",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::28992" } },
+"features": [
+{ "type": "Feature", "properties": { "name": "AVATAR To Wavy AWAY Ty" }, "geometry": { "type": "Point", "coordinates": [ 120050, 486350 ] } },
+{ "type": "Feature", "properties": { "name": "office affluent fifty flow" }, "geometry": { "type": "Point", "coordinates": [ 120050, 486290 ] } },
+{ "type": "Feature", "properties": { "name": "مرحبا بالعالم" }, "geometry": { "type": "Point", "coordinates": [ 120050, 486230 ] } },
+{ "type": "Feature", "properties": { "name": "Ångström ÖÜ éèê ñ ß" }, "geometry": { "type": "Point", "coordinates": [ 120050, 486170 ] } },
+{ "type": "Feature", "properties": { "name": "שלום עולם 123 abc" }, "geometry": { "type": "Point", "coordinates": [ 120050, 486110 ] } }
+]
+}

@@ -1,4 +1,4 @@
-FROM debian:bookworm AS builder
+FROM debian:trixie AS builder
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -35,11 +35,12 @@ RUN apt-get update -y --fix-missing && \
         git \
         locales \
         make \
+        meson \
+        ninja-build \
         patch \
         openssh-server \
         protobuf-compiler \
         protobuf-c-compiler \
-        software-properties-common \
         wget \
         && \
     rm -rf /var/lib/apt/lists/*
@@ -59,13 +60,14 @@ RUN wget https://github.com/sqlite/sqlite/archive/refs/tags/version-${SQLITE_VER
     make install && \
     ldconfig
 
-ENV HARFBUZZ_VERSION="7.3.0"
+ENV HARFBUZZ_VERSION="10.2.0"
 RUN wget https://github.com/harfbuzz/harfbuzz/releases/download/$HARFBUZZ_VERSION/harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
     tar xJf harfbuzz-$HARFBUZZ_VERSION.tar.xz && \
     cd harfbuzz-$HARFBUZZ_VERSION && \
-    ./configure && \
-    make -j$(nproc) && \
-    make install && \
+    meson setup build --prefix=/usr/local --libdir=lib --buildtype=release \
+        -Dtests=disabled -Ddocs=disabled -Dbenchmark=disabled -Dintrospection=disabled && \
+    meson compile -C build && \
+    meson install -C build && \
     ldconfig
 
 ENV PROJ_VERSION="9.3.1"
@@ -155,7 +157,7 @@ RUN mkdir /usr/local/src/mapserver/build && \
     make install && \
     ldconfig
 
-FROM pdok/lighttpd:1.4.67-bookworm AS service
+FROM pdok/lighttpd:1.4.85-trixie AS service
 
 USER root
 LABEL maintainer="PDOK dev <https://github.com/PDOK/mapserver-docker/issues>"
@@ -185,7 +187,7 @@ RUN apt-get -y update --fix-missing && \
         libprotobuf32 \
         libprotobuf-c1 \
         gettext-base \
-        libspatialite7 \
+        libspatialite8t64 \
         libsqlite3-mod-spatialite \
         wget \
         sqlite3 \

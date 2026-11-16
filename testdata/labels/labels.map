@@ -1,0 +1,68 @@
+MAP
+  NAME          ""
+  CONFIG        "MS_ERRORFILE" "stderr"
+  EXTENT        120000 486000 120800 486400
+  SIZE          800 400
+  UNITS         meters
+  STATUS        ON
+  FONTSET       "/srv/data/fonts.txt"
+  PROJECTION
+    "init=epsg:28992"
+  END
+
+  WEB
+    METADATA
+      "ows_enable_request"               "*"
+      "ows_schemas_location"             "http://schemas.opengis.net"
+      "ows_srs"                          "EPSG:28992"
+      "ows_title"                        "labels"
+      "wms_allow_getmap_without_styles"  "true"
+      "wms_onlineresource"               "http://localhost"
+    END
+  END
+
+  SYMBOL
+    NAME "circle"
+    TYPE ELLIPSE
+    FILLED TRUE
+    POINTS 1 1 END
+  END
+
+  LAYER
+    STATUS ON
+    NAME "labels"
+    TYPE POINT
+
+    CONNECTIONTYPE OGR
+    CONNECTION "/srv/data/labels.geojson"
+    DATA "labels"
+    LABELITEM "name"
+
+    PROJECTION
+      "init=epsg:28992"
+    END
+
+    METADATA
+      "ows_title" "labels"
+    END
+
+    CLASS
+      STYLE
+        SYMBOL "circle"
+        SIZE 8
+        COLOR 0 126 169
+      END
+      LABEL
+        TYPE TRUETYPE
+        FONT "dejavu"
+        SIZE 20
+        ENCODING "UTF-8"
+        COLOR 0 0 0
+        OUTLINECOLOR 255 255 255
+        POSITION CR
+        OFFSET 10 0
+        FORCE TRUE
+      END
+    END
+  END
+END
