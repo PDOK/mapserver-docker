@@ -151,6 +151,7 @@ jobs:
           docker stop mapserver-rdnap-wfs
 
           exit $exit_code
+
       - name: Regression test => Different CRS (RDNAPTRANS -> EPSG:4258)
         run: |
           # start mapserver
@@ -173,5 +174,41 @@ jobs:
 
           # stop mapserver
           docker stop mapserver-crs
+
+          exit $exit_code
+
+      # Smoke test for the text rendering stack (freetype, harfbuzz, fribidi, cairo), not a bug-specific regression test.
+      # On failure after an upgrade: inspect the diff, regenerate expected/labels.png if acceptable.
+      - name: Smoke test => TrueType label rendering and text shaping (WMS)
+        run: |
+          # start WMS mapserver
+          docker run -e MAPSERVER_CONFIG_FILE=/srv/data/labels.conf -e MS_MAPFILE=/srv/data/labels.map -e SERVICE_TYPE=WMS --rm -d \
+          -p 8183:80 --name mapserver-labels-wms -v `pwd`/testdata/labels:/srv/data pdok/mapserver:local
+
+          # execute request
+          mkdir -p `pwd`/testdata/labels/actual
+          curl "http://localhost:8183/mapserver?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX=120000,486000,120800,486400&CRS=EPSG:28992&WIDTH=800&HEIGHT=400&LAYERS=labels&STYLES=&FORMAT=image/png" -sLo `pwd`/testdata/labels/actual/labels.png
+
+          # assert results are as expected
+          exit_code=0
+
+          # diff png files, if binary diff exists, check for 'perceptual diff' using compiled binary of https://github.com/myint/perceptualdiff
+          labels_diff=$(diff -q `pwd`/testdata/labels/expected/labels.png `pwd`/testdata/labels/actual/labels.png)
+          if [ -n "$labels_diff" ]
+          then
+              echo "binary diff between images, checking for perceptual diff"
+              labels_pdiff=$(`pwd`/testdata/perceptualdiff `pwd`/testdata/labels/expected/labels.png `pwd`/testdata/labels/actual/labels.png)
+              if [ -n "$labels_pdiff" ]
+              then
+                  echo "$labels_pdiff"
+                  exit_code=1
+              fi
+          fi
+
+          # cleanup
+          rm -rf `pwd`/testdata/labels/actual
+
+          # stop mapserver
+          docker stop mapserver-labels-wms
 
           exit $exit_code
