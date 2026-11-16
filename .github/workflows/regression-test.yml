@@ -39,12 +39,10 @@ jobs:
           exit_code=0
 
           # diff WMS png files, if binary diff exists, check for 'perceptual diff' using compiled binary of https://github.com/myint/perceptualdiff
-          wms_diff=$(diff -q `pwd`/testdata/rectobj/expected/wms.png `pwd`/testdata/rectobj/actual/rectobj.png)
-          if [ -n "$wms_diff" ]
+          if ! cmp -s `pwd`/testdata/rectobj/expected/wms.png `pwd`/testdata/rectobj/actual/rectobj.png
           then
               echo "binary diff between images, checking for perceptual diff"
-              wms_pdiff=$(`pwd`/testdata/perceptualdiff `pwd`/testdata/rectobj/expected/wms.png `pwd`/testdata/rectobj/actual/rectobj.png)
-              if [ -n "$wms_pdiff" ]
+              if ! wms_pdiff=$(`pwd`/testdata/perceptualdiff `pwd`/testdata/rectobj/expected/wms.png `pwd`/testdata/rectobj/actual/rectobj.png)
               then
                   echo "$wms_pdiff"
                   exit_code=1
@@ -73,8 +71,7 @@ jobs:
           exit_code=0
 
           # diff WFS xml files, ignore timestamp but match numberMatched and numberReturned
-          wfs_diff=$(diff -q `pwd`/testdata/rectobj/expected/wfs.xml `pwd`/testdata/rectobj/actual/rectobj.xml -I 'timeStamp="[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}T[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\}"\snumberMatched="5"\snumberReturned="5"')
-          if [ -n "$wfs_diff" ]
+          if ! wfs_diff=$(diff -q `pwd`/testdata/rectobj/expected/wfs.xml `pwd`/testdata/rectobj/actual/rectobj.xml -I 'timeStamp="[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}T[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\}"\snumberMatched="5"\snumberReturned="5"')
           then
               echo "$wfs_diff"
               exit_code=1
@@ -193,12 +190,10 @@ jobs:
           exit_code=0
 
           # diff png files, if binary diff exists, check for 'perceptual diff' using compiled binary of https://github.com/myint/perceptualdiff
-          labels_diff=$(diff -q `pwd`/testdata/labels/expected/labels.png `pwd`/testdata/labels/actual/labels.png)
-          if [ -n "$labels_diff" ]
+          if ! cmp -s `pwd`/testdata/labels/expected/labels.png `pwd`/testdata/labels/actual/labels.png
           then
               echo "binary diff between images, checking for perceptual diff"
-              labels_pdiff=$(`pwd`/testdata/perceptualdiff `pwd`/testdata/labels/expected/labels.png `pwd`/testdata/labels/actual/labels.png)
-              if [ -n "$labels_pdiff" ]
+              if ! labels_pdiff=$(`pwd`/testdata/perceptualdiff `pwd`/testdata/labels/expected/labels.png `pwd`/testdata/labels/actual/labels.png)
               then
                   echo "$labels_pdiff"
                   exit_code=1
